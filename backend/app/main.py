@@ -101,33 +101,13 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
 
 def get_current_user(token: str, db: Session) -> User:
-    # Support instant demo token seamlessly with real DB user
-    if token == "demo_guest_token_2026":
-        demo_user = db.query(User).filter(User.email == "demo@mentoraiaura.com").first()
-        if not demo_user:
-            demo_user = User(
-                name="Alex Candidate",
-                email="demo@mentoraiaura.com",
-                phone="+91 98765 43210",
-                education="B.Tech in Computer Science",
-                college="National Institute of Technology",
-                degree="Bachelor of Technology",
-                career_interests="Full Stack Web, AI Systems, Cloud Engineering",
-                target_role="Full Stack Developer",
-                hashed_password=password_hash.hash("DemoPassword123")
-            )
-            db.add(demo_user)
-            db.commit()
-            db.refresh(demo_user)
-        return demo_user
-
     try:
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
         user_id = int(payload.get("sub", ""))
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired authentication session",
+            detail="Invalid or expired authentication session. Please sign in.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

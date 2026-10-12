@@ -235,6 +235,8 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
 
   // Real Google OAuth States
   const [googleClientId, setGoogleClientId] = useState<string>(() => {
@@ -411,11 +413,35 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+    setFormSuccess(null);
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const trimmedName = name.trim();
+
+    if (!trimmedEmail) {
+      setFormError("Please enter your registered email address.");
+      return;
+    }
+
+    if (!trimmedPassword) {
+      setFormError("Please enter your password.");
+      return;
+    }
+
+    if (isSignUp && !trimmedName) {
+      setFormError("Please enter your full name.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const endpoint = isSignUp ? "/auth/register" : "/auth/login";
-      const body = isSignUp ? { name, email, password } : { email, password };
+      const body = isSignUp
+        ? { name: trimmedName, email: trimmedEmail, password: trimmedPassword }
+        : { email: trimmedEmail, password: trimmedPassword };
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
@@ -423,25 +449,42 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
         body: JSON.stringify(body),
       }).catch(() => null);
 
-      if (response && response.ok) {
-        const data = await response.json();
-        if (data.access_token) {
-          localStorage.setItem("access_token", data.access_token);
-        }
-      } else {
-        localStorage.setItem("access_token", "demo_guest_token_2026");
+      if (!response) {
+        setFormError("Could not reach authentication server. Please check your network or server status.");
+        return;
       }
 
-      if (onLogin) {
-        onLogin({
-          name: name || (email ? email.split("@")[0] : "Alex Candidate"),
-          email: email || "demo@mentoraiaura.com",
-        });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        const errorDetail =
+          errorData?.detail ||
+          (isSignUp
+            ? "Registration failed. This email may already be registered."
+            : "Invalid email or password. Please check your credentials or create an account.");
+        setFormError(errorDetail);
+        return;
       }
-    } catch {
-      if (onLogin) {
-        onLogin({ name: "Alex Candidate", email: "demo@mentoraiaura.com" });
+
+      const data = await response.json();
+      if (!data.access_token) {
+        setFormError("Authentication failed: No access token received from server.");
+        return;
       }
+
+      // Authentic registered login / registration success
+      localStorage.setItem("access_token", data.access_token);
+      setFormError(null);
+
+      const loggedUser = data.user || {
+        name: trimmedName || trimmedEmail.split("@")[0],
+        email: trimmedEmail,
+      };
+
+      if (onLogin) {
+        onLogin(loggedUser);
+      }
+    } catch (err: any) {
+      setFormError(err?.message || "An unexpected error occurred during sign in.");
     } finally {
       setIsSubmitting(false);
     }
@@ -589,6 +632,18 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {formError && (
+              <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 flex items-start gap-2.5 text-rose-300 text-xs shadow-lg shadow-rose-950/40 animate-in fade-in duration-200">
+                <AlertCircle size={17} className="shrink-0 mt-0.5 text-rose-400" />
+                <span className="font-medium leading-relaxed">{formError}</span>
+              </div>
+            )}
+            {formSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-start gap-2.5 text-emerald-300 text-xs shadow-lg shadow-emerald-950/40 animate-in fade-in duration-200">
+                <CheckCircle2 size={17} className="shrink-0 mt-0.5 text-emerald-400" />
+                <span className="font-medium leading-relaxed">{formSuccess}</span>
+              </div>
+            )}
             {isSignUp && (
               <AnimatedFormField
                 label="Full Name"
@@ -721,7 +776,11 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
               <button
                 type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setFormError(null);
+                  setFormSuccess(null);
+                }}
                 className="text-blue-400 hover:text-blue-300 font-bold underline underline-offset-4 ml-1 cursor-pointer transition-colors"
               >
                 {isSignUp ? 'Sign In' : 'Create Account'}

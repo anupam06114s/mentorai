@@ -105,7 +105,14 @@ CERTIFICATIONS
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem("access_token")));
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token || token === "demo_guest_token_2026") {
+      localStorage.removeItem("access_token");
+      return false;
+    }
+    return true;
+  });
 
   // User Profile State
   const [userProfile, setUserProfile] = useState({
@@ -199,20 +206,35 @@ export default function App() {
 
   // Helper auth token getter
   function getAuthToken() {
-    return localStorage.getItem("access_token") || "demo_guest_token_2026";
+    const token = localStorage.getItem("access_token");
+    if (!token || token === "demo_guest_token_2026") return "";
+    return token;
   }
 
   // Fetch initial user profile and data
   useEffect(() => {
     if (!isLoggedIn) return;
     const token = getAuthToken();
+    if (!token) {
+      setIsLoggedIn(false);
+      localStorage.removeItem("access_token");
+      return;
+    }
 
     fetch(`${API_BASE_URL}/api/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (!res.ok) {
+          setIsLoggedIn(false);
+          localStorage.removeItem("access_token");
+          return null;
+        }
+        return res.json();
+      })
       .then(data => {
         if (data) {
+          setIsLoggedIn(true);
           setUserProfile(data);
           setEditFormData(data);
           setScheduleForm(prev => ({

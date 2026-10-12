@@ -1,59 +1,48 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
-    "app": {
-      "root": ".",
-      "framework": "fastapi"
-    },
     "frontend": {
-      "root": "frontend",
-      "framework": "vite",
-      "bindings": [
-        {
-          "type": "service",
-          "service": "app",
-          "format": "url",
-          "env": "BACKEND_URL"
-        }
-      ]
+      "root": "frontend/",
+      "framework": "vite"
+    },
+    "backend": {
+      "root": "backend/",
+      "framework": "fastapi",
+      "entrypoint": "main:app"
     }
   },
   "rewrites": [
     {
-      "source": "/auth/(.*)",
-      "destination": {
-        "service": "app"
-      }
+      "source": "/api/(.*)",
+      "destination": { "service": "backend" }
     },
     {
-      "source": "/api/(.*)",
-      "destination": {
-        "service": "app"
-      }
+      "source": "/api",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/auth/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/auth",
+      "destination": { "service": "backend" }
     },
     {
       "source": "/health",
-      "destination": {
-        "service": "app"
-      }
+      "destination": { "service": "backend" }
     },
     {
       "source": "/docs",
-      "destination": {
-        "service": "app"
-      }
+      "destination": { "service": "backend" }
     },
     {
       "source": "/openapi.json",
-      "destination": {
-        "service": "app"
-      }
+      "destination": { "service": "backend" }
     },
     {
       "source": "/(.*)",
-      "destination": {
-        "service": "frontend"
-      }
+      "destination": { "service": "frontend" }
     }
   ]
 }

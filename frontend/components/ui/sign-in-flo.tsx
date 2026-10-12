@@ -438,7 +438,7 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
     setIsSubmitting(true);
 
     try {
-      const endpoint = isSignUp ? "/auth/register" : "/auth/login";
+      const endpoint = isSignUp ? "/api/auth/register" : "/api/auth/login";
       const body = isSignUp
         ? { name: trimmedName, email: trimmedEmail, password: trimmedPassword }
         : { email: trimmedEmail, password: trimmedPassword };
@@ -454,6 +454,12 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
         return;
       }
 
+      const contentType = response.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        setFormError("Backend authentication service is unavailable or returned unexpected HTML. Please verify deployment.");
+        return;
+      }
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         const errorDetail =
@@ -466,8 +472,8 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
       }
 
       const data = await response.json();
-      if (!data.access_token) {
-        setFormError("Authentication failed: No access token received from server.");
+      if (!data?.access_token || typeof data.access_token !== "string") {
+        setFormError("Authentication failed: No valid access token received from server.");
         return;
       }
 

@@ -2124,13 +2124,18 @@ export default function App() {
   if (!isLoggedIn) {
     return (
       <Auth
-        onLogin={(guestUser) => {
-          if (guestUser) {
+        onLogin={(authedUser) => {
+          const token = localStorage.getItem("access_token");
+          if (!token || token === "demo_guest_token_2026") {
+            setIsLoggedIn(false);
+            return;
+          }
+          if (authedUser) {
             setUserProfile(prev => ({
               ...prev,
-              name: guestUser.name,
-              email: guestUser.email,
-              avatar_url: guestUser.avatar_url || prev.avatar_url
+              name: authedUser.name || prev.name,
+              email: authedUser.email || prev.email,
+              avatar_url: authedUser.avatar_url || prev.avatar_url
             }));
           }
           setIsLoggedIn(true);

@@ -158,6 +158,7 @@ def health_check():
 # 🔐 AUTHENTICATION ENDPOINTS
 # =====================================================================
 @app.post("/auth/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
+@app.post("/api/auth/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserRegister, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == str(user_data.email).lower()).first()
     if existing:
@@ -186,6 +187,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     }
 
 @app.post("/auth/google", response_model=AuthResponse)
+@app.post("/api/auth/google", response_model=AuthResponse)
 def google_auth(payload: GoogleLoginRequest, db: Session = Depends(get_db)):
     email_val = str(payload.email or "candidate.google@mentoraiaura.com").strip().lower()
     name_val = (payload.name or email_val.split("@")[0]).strip()
@@ -289,6 +291,7 @@ def get_recent_google_accounts(db: Session = Depends(get_db)):
     return accounts
 
 @app.post("/auth/login", response_model=TokenResponse)
+@app.post("/api/auth/login", response_model=TokenResponse)
 def login(user_data: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == str(user_data.email).lower()).first()
     if not user or not user.hashed_password:
@@ -306,6 +309,7 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 @app.post("/auth/logout")
+@app.post("/api/auth/logout")
 def logout():
     return {"message": "Session terminated successfully"}
 

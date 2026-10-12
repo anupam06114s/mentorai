@@ -241,7 +241,7 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
   // Real Google OAuth States
   const [googleClientId, setGoogleClientId] = useState<string>(() => {
     return (
-      (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) ||
+      ((import.meta as any).env?.VITE_GOOGLE_CLIENT_ID as string) ||
       localStorage.getItem("mentor_google_client_id") ||
       ""
     );

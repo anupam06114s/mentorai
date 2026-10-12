@@ -1,7 +1,6 @@
-import { Component } from "@/components/ui/sign-in-flo";
+import ContactWithGlobe from "@/components/ui/contact-with-globe";
 
-const DemoOne = () => {
-  return <Component />;
-};
-
-export { DemoOne };
+export default function ContactWithGlobeDemo() {
+  return <ContactWithGlobe />;
+}
+export { ContactWithGlobeDemo };

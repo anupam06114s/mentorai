@@ -49,6 +49,7 @@ from .test_engine import (
     evaluate_exam_submission
 )
 from .mentor_engine import generate_mentor_reply
+from .job_engine import filter_jobs, get_all_jobs
 
 # Load environment variables
 load_dotenv()
@@ -755,10 +756,47 @@ def get_test_history(
 # 5. 💬 AI MENTOR CHAT
 # =====================================================================
 @app.post("/api/mentor/chat")
+@app.post("/mentor/chat")
 def mentor_chat(data: dict = Body(...)):
     message = data.get("message", "")
     history = data.get("history", [])
+    custom_api_key = data.get("api_key") or data.get("custom_api_key")
+    provider = data.get("provider", "auto")
+
     if not message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
-    reply = generate_mentor_reply(message, history)
-    return {"reply": reply}
+    res = generate_mentor_reply(
+        user_message=message,
+        history=history,
+        custom_api_key=custom_api_key,
+        provider=provider
+    )
+    return res
+
+# =====================================================================
+# 6. 💼 REAL JOBS AGGREGATOR (GOVERNMENT & PRIVATE)
+# =====================================================================
+@app.get("/api/jobs")
+@app.get("/jobs")
+def get_jobs(
+    search: Optional[str] = None,
+    sector: Optional[str] = None,
+    category: Optional[str] = None,
+    work_mode: Optional[str] = None,
+    location: Optional[str] = None,
+    page: int = 1,
+    limit: int = 60
+):
+    """
+    Real-time aggregated jobs from official Government recruitment feeds and private job APIs.
+    """
+    return filter_jobs(
+        search=search,
+        sector=sector,
+        category=category,
+        work_mode=work_mode,
+        location=location,
+        page=page,
+        limit=limit
+    )
+

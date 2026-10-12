@@ -1,6 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useUser, useClerk } from "@clerk/react";
 import confetti from "canvas-confetti";
+import { BeamBorder } from "@/components/ui/border-beam";
+import { BorderBeam } from "@/components/ui/border-beam-search";
+import { EarthBlaze } from "@/components/ui/earth-blaze";
+import { BackgroundGradientGlow } from "@/components/ui/background-gradient-glow";
+import { TextShimmer } from "@/components/ui/text-shimmer";
+import { MentorChatModule } from "./components/ui/mentor-chat";
+import ContactWithGlobe from "./components/ui/contact-with-globe";
+import FindJobModule from "./components/ui/find-job";
 import Auth from "./Auth";
 import {
   LayoutDashboard,
@@ -8,6 +16,9 @@ import {
   Compass,
   Video,
   Brain,
+  MessageSquare,
+  Globe,
+  Briefcase,
   CalendarDays,
   Settings,
   Search,
@@ -2056,68 +2067,139 @@ export default function App() {
       );
     }
 
+    if (page === "chat") {
+      return <MentorChatModule userProfile={userProfile} />;
+    }
+
+    if (page === "jobs") {
+      return <FindJobModule userProfile={userProfile} />;
+    }
+
+    if (page === "contact") {
+      return <ContactWithGlobe />;
+    }
+
     // =======================================================================
     // DEFAULT DASHBOARD VIEW
     // =======================================================================
     return (
       <>
-        {/* Welcome Banner */}
-        <section className="welcome-banner">
-          <div className="welcome-copy">
-            <div className="eyebrow"><Sparkles size={15} /> MENTOR AI AURA • CAREER WORKSPACE</div>
-            <h2>Empower your career,<br />one milestone at a time.</h2>
-            <p>AI-driven resume optimization, personalized career roadmaps, voice mock interviews, and competitive exam preparation.</p>
-            <button className="light-btn" onClick={() => setPage("resume")}>
-              Analyze Resume ATS <ArrowUpRight size={17} />
-            </button>
-          </div>
-          <div className="banner-art">
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="art-core"><Sparkles size={48} /></div>
-            <div className="floating-card">✦ AI Aura</div>
-          </div>
-        </section>
+        {/* Cosmic EarthBlaze Header with Animated BeamBorder */}
+        <div className="dashboard-hero-wrapper">
+          <BeamBorder
+            size="md"
+            colorVariant="colorful"
+            theme="dark"
+            active={true}
+            strength={1.5}
+            duration={3.5}
+            beamWidth={2}
+            borderRadius={24}
+            className="w-full max-w-[1020px] mx-auto rounded-3xl overflow-hidden shadow-2xl"
+          >
+            <div className="earth-blaze-header-container">
+              <EarthBlaze
+                starCount={2400}
+                galaxyBrightness={1.15}
+                surfaceBrightness={1.1}
+                illumination={1.2}
+                auroraEnabled={true}
+                interactive={true}
+                className="rounded-3xl"
+                style={{
+                  height: 290,
+                  minHeight: 260,
+                  aspectRatio: "auto",
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                }}
+              >
+                <div className="earth-blaze-dashboard-overlay">
+                  <div className="earth-blaze-brand-badge">
+                    <div className="earth-blaze-logo-icon">
+                      <Sparkles size={16} />
+                    </div>
+                    <span className="earth-blaze-brand-text">
+                      Mentor AI <strong className="brand-aura-highlight">Aura</strong>
+                    </span>
+                  </div>
 
-        {/* 4 Main Modules Grid */}
+                  <div className="earth-blaze-welcome-bottom-right">
+                    <h1 className="earth-blaze-welcome-heading">
+                      <TextShimmer
+                        text={`Welcome, ${userProfile?.name || "Candidate"}`}
+                        as="span"
+                        duration={2.4}
+                        spread={36}
+                        baseColor="#cbd5e1"
+                        shimmerColor="#ffffff"
+                        className="earth-blaze-shimmer-welcome"
+                      />
+                      <span className="welcome-wave-emoji">👋</span>
+                    </h1>
+                  </div>
+                </div>
+              </EarthBlaze>
+            </div>
+          </BeamBorder>
+        </div>
+
+        {/* 6 Main Modules Grid */}
         <div className="section-heading">
           <div>
             <h2>Core Modules</h2>
             <p>Select any module below to begin your career preparation.</p>
           </div>
-          <span className="live-pill"><span /> 4 Modules Ready</span>
+          <span className="live-pill"><span /> 7 Modules Ready</span>
         </div>
 
         <div className="feature-grid">
           <button className="feature-card" onClick={() => setPage("resume")}>
-            <div className="feature-icon resume"><FileUser size={24} /></div>
+            <div className="feature-icon resume"><FileUser size={40} /></div>
             <ArrowUpRight className="card-arrow" size={19} />
             <h3>Resume Analyzer</h3>
-            <p>Extract qualifications, evaluate ATS compatibility, identify missing skills, and review audit history.</p>
             <span className="card-link">Open Module <span>→</span></span>
           </button>
 
           <button className="feature-card" onClick={() => setPage("career")}>
-            <div className="feature-icon career"><Compass size={24} /></div>
+            <div className="feature-icon career"><Compass size={40} /></div>
             <ArrowUpRight className="card-arrow" size={19} />
             <h3>Career Guidance</h3>
-            <p>Personalized job recommendations, skill gap analysis, and tailored step-by-step preparation roadmaps.</p>
             <span className="card-link">Open Module <span>→</span></span>
           </button>
 
           <button className="feature-card" onClick={() => setPage("interview")}>
-            <div className="feature-icon interview"><Video size={24} /></div>
+            <div className="feature-icon interview"><Video size={40} /></div>
             <ArrowUpRight className="card-arrow" size={19} />
             <h3>Mock Interview</h3>
-            <p>Interactive AI voice interviews with microphone evaluation and human interviewer video scheduling.</p>
             <span className="card-link">Open Module <span>→</span></span>
           </button>
 
           <button className="feature-card" onClick={() => setPage("tests")}>
-            <div className="feature-icon tests"><Brain size={24} /></div>
+            <div className="feature-icon tests"><Brain size={40} /></div>
             <ArrowUpRight className="card-arrow" size={19} />
             <h3>Mock Test</h3>
-            <p>Assessment module for Government exams (SSC, Banking) and Corporate placement tests with PYQs.</p>
+            <span className="card-link">Open Module <span>→</span></span>
+          </button>
+
+          <button className="feature-card" onClick={() => setPage("chat")}>
+            <div className="feature-icon chat"><MessageSquare size={40} /></div>
+            <ArrowUpRight className="card-arrow" size={19} />
+            <h3>AI Mentor Chat</h3>
+            <span className="card-link">Open Module <span>→</span></span>
+          </button>
+
+          <button className="feature-card" onClick={() => setPage("jobs")}>
+            <div className="feature-icon jobs"><Briefcase size={40} /></div>
+            <ArrowUpRight className="card-arrow" size={19} />
+            <h3>Find Job</h3>
+            <span className="card-link">Open Module <span>→</span></span>
+          </button>
+
+          <button className="feature-card" onClick={() => setPage("contact")}>
+            <div className="feature-icon contact"><Mail size={40} /></div>
+            <ArrowUpRight className="card-arrow" size={19} />
+            <h3>Contact Us</h3>
             <span className="card-link">Open Module <span>→</span></span>
           </button>
         </div>
@@ -2193,6 +2275,9 @@ export default function App() {
     career: "Career Guidance",
     interview: "Mock Interview",
     tests: "Mock Test",
+    chat: "AI Mentor Aura Chat",
+    jobs: "Find Job",
+    contact: "Contact Us",
     profile: "User Profile",
   }[page] || "Dashboard";
 
@@ -2215,7 +2300,7 @@ export default function App() {
           </button>
         </div>
 
-        <div className="nav-label">FOUR MAIN MODULES</div>
+        <div className="nav-label">MAIN MODULES (7)</div>
         <nav>
           {[
             { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -2223,6 +2308,9 @@ export default function App() {
             { id: "career", label: "Career Guidance", icon: Compass },
             { id: "interview", label: "Mock Interview", icon: Video },
             { id: "tests", label: "Mock Test", icon: Brain },
+            { id: "chat", label: "AI Mentor Chat", icon: MessageSquare },
+            { id: "jobs", label: "Find Job", icon: Briefcase },
+            { id: "contact", label: "Contact Us", icon: Mail },
           ].map(item => {
             const Icon = item.icon;
             return (
@@ -2265,31 +2353,55 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="main-area">
+      <main className={`main-area ${page === "dashboard" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
         <header className="topbar">
-          <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
-            <Menu size={22} />
-          </button>
-          <div className="breadcrumb">
-            Mentor AI Aura <span>/</span> <strong>{pageTitle}</strong>
-          </div>
-          <div className="top-actions">
-            <div className="search-box">
-              <Search size={17} />
-              <input
-                placeholder="Search modules..."
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const q = e.currentTarget.value.toLowerCase();
-                    if (q.includes("resume")) setPage("resume");
-                    else if (q.includes("career")) setPage("career");
-                    else if (q.includes("interview")) setPage("interview");
-                    else if (q.includes("test") || q.includes("exam")) setPage("tests");
-                    else if (q.includes("profile")) setPage("profile");
-                  }
-                }}
-              />
+          <div className="topbar-left">
+            <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
+              <Menu size={22} />
+            </button>
+            <div className="breadcrumb">
+              Mentor AI Aura <span>/</span> <strong>{pageTitle}</strong>
             </div>
+          </div>
+
+          {/* Centered Glowing BorderBeam Search Module */}
+          <div className="topbar-search-middle">
+            <BorderBeam
+              size="sm"
+              colorVariant="colorful"
+              theme="dark"
+              active={true}
+              strength={1.3}
+              duration={3.1}
+              beamWidth={2}
+              borderRadius={64}
+              className="topbar-beam-search-wrapper"
+            >
+              <div className="topbar-beam-search-box">
+                <Search size={18} className="search-icon-dimmed" />
+                <input
+                  type="text"
+                  placeholder="Search modules..."
+                  className="beam-search-input"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const q = e.currentTarget.value.toLowerCase();
+                      if (q.includes("resume")) setPage("resume");
+                      else if (q.includes("career")) setPage("career");
+                      else if (q.includes("interview")) setPage("interview");
+                      else if (q.includes("test") || q.includes("exam")) setPage("tests");
+                      else if (q.includes("chat")) setPage("chat");
+                      else if (q.includes("job") || q.includes("hiring")) setPage("jobs");
+                      else if (q.includes("contact") || q.includes("globe")) setPage("contact");
+                      else if (q.includes("profile")) setPage("profile");
+                    }
+                  }}
+                />
+              </div>
+            </BorderBeam>
+          </div>
+
+          <div className="top-actions">
             <button className="icon-btn" title="Live System"><Bell size={19} /><i /></button>
             <div
               className="top-avatar"
@@ -2306,30 +2418,30 @@ export default function App() {
           </div>
         </header>
 
-        <div className="page-content">
-          <div className="page-intro">
-            <div>
-              <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>
-              <h1>
-                {page === "dashboard" ? `Welcome back, ${userProfile.name}!` : pageTitle}
-                <span className="title-sparkle">✦</span>
-              </h1>
-              <p>
-                {page === "dashboard"
-                  ? "AI-powered platform for resume analysis, career guidance, exam preparation, and interview practice."
-                  : "Every milestone brings you closer to your target opportunity."}
-              </p>
+        <div className={`page-content ${page === "chat" ? "page-content-chat-full" : ""}`}>
+          {page !== "dashboard" && page !== "chat" && page !== "contact" && (
+            <div className="page-intro">
+              <div>
+                <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>
+                <h1>
+                  {pageTitle}
+                  <span className="title-sparkle">✦</span>
+                </h1>
+                <p>Every milestone brings you closer to your target opportunity.</p>
+              </div>
+              <div className="date-chip">
+                <Sparkles size={16} /> Mentor AI Aura
+              </div>
             </div>
-            <div className="date-chip">
-              <Sparkles size={16} /> Mentor AI Aura
-            </div>
-          </div>
+          )}
 
           {renderMainContent()}
 
-          <footer>
-            © 2026 Mentor AI Aura <span>• AI-Powered Career Guidance & Exam Preparation Platform.</span>
-          </footer>
+          {page !== "chat" && (
+            <footer>
+              © 2026 Mentor AI Aura <span>• AI-Powered Career Guidance & Exam Preparation Platform.</span>
+            </footer>
+          )}
         </div>
       </main>
 

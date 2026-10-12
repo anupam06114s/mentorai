@@ -107,7 +107,7 @@ const AnimatedFormField: React.FC<FormFieldProps> = ({
             type={type}
             value={value}
             onChange={onChange}
-            className="w-full bg-transparent pl-11 pr-12 py-3 text-white placeholder:text-slate-500 focus:outline-none text-sm"
+            className="w-full bg-transparent pl-11 pr-12 py-3 text-white placeholder:text-slate-500 focus:outline-none text-base sm:text-sm"
             placeholder={placeholder}
           />
 
@@ -600,7 +600,7 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-background flex items-center justify-center p-3 sm:p-4 py-8 sm:py-12 relative overflow-y-auto">
       {/* Ultra-Smooth Animated WebGL Gradient Wave Background */}
       <GradientWave
         colors={["#030712", "#1e1b4b", "#1d4ed8", "#4f46e5", "#0f172a", "#020617"]}
@@ -613,7 +613,7 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
       <FloatingParticles />
       
       <div className="relative z-10 w-full max-w-[430px] my-auto">
-        <div className="bg-slate-950/85 backdrop-blur-xl border border-white/15 rounded-2xl p-6 sm:p-7 shadow-2xl shadow-indigo-950/50">
+        <div className="bg-slate-950/85 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-7 shadow-2xl shadow-indigo-950/50">
           
           {/* Top Mentor AI Logo & Branding */}
           <div className="text-center mb-6">
@@ -798,8 +798,8 @@ export const Component: React.FC<SignInFloProps> = ({ onLogin }) => {
 
       {/* Google OAuth Client ID Setup Modal (Prompted if Client ID not configured) */}
       {showClientIdModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-[#202124] text-white border border-white/15 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-7 animate-in zoom-in-95 duration-200 font-sans">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-[#202124] text-white border border-white/15 w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden p-5 sm:p-7 animate-in zoom-in-95 duration-200 font-sans">
             <div className="flex items-start justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2.5">
                 <GoogleIcon className="w-6 h-6 shrink-0" />

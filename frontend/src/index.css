@@ -84,3 +84,162 @@ body {
 #root {
   min-height: 100vh;
 }
+
+/* =====================================================================
+   CLERK MODAL THEME CUSTOMIZATION (Matches Mentor AI Aura Main Page)
+   ===================================================================== */
+.cl-modalBackdrop {
+  background: rgba(3, 7, 18, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  z-index: 99999 !important;
+}
+
+.cl-modalContent {
+  background: transparent !important;
+  z-index: 100000 !important;
+}
+
+.cl-card {
+  background: rgba(2, 6, 23, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 25px 65px -12px rgba(30, 27, 75, 0.85), 0 0 40px rgba(79, 70, 229, 0.15) !important;
+  border-radius: 1.5rem !important;
+  color: #ffffff !important;
+}
+
+.cl-headerTitle {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 1.35rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+.cl-headerSubtitle {
+  color: #94a3b8 !important;
+  font-size: 0.825rem !important;
+}
+
+.cl-formButtonPrimary {
+  background: linear-gradient(to right, #2563eb, #4f46e5, #9333ea) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.45) !important;
+  border-radius: 0.875rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background: linear-gradient(to right, #3b82f6, #6366f1, #a855f7) !important;
+  box-shadow: 0 12px 30px -5px rgba(99, 102, 241, 0.6) !important;
+  transform: translateY(-1px) !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-radius: 0.875rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border-color: rgba(99, 102, 241, 0.6) !important;
+}
+
+.cl-socialButtonsBlockButtonText {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.cl-formFieldLabel {
+  color: #cbd5e1 !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+}
+
+.cl-formFieldInput {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-radius: 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+.cl-formFieldInput:focus {
+  border-color: rgba(99, 102, 241, 0.8) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
+}
+
+.cl-dividerLine {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.cl-dividerText {
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
+}
+
+.cl-footerActionText {
+  color: #94a3b8 !important;
+}
+
+.cl-footerActionLink {
+  color: #60a5fa !important;
+  font-weight: 600 !important;
+}
+
+.cl-footerActionLink:hover {
+  color: #93c5fd !important;
+  text-decoration: underline !important;
+}
+
+.cl-identityPreview {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 0.75rem !important;
+}
+
+.cl-identityPreviewText {
+  color: #ffffff !important;
+}
+
+.cl-identityPreviewEditButtonIcon {
+  color: #818cf8 !important;
+}
+
+.cl-otpCodeFieldInputs,
+[data-input-otp-container="true"] {
+  display: flex !important;
+  gap: 0.625rem !important;
+  justify-content: center !important;
+  margin: 1.25rem 0 !important;
+}
+
+.cl-otpCodeFieldInput,
+[data-testid="otp-input-segment"],
+.cl-otpCodeInput,
+input[data-otp-input] {
+  background-color: #0f172a !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  border-radius: 0.75rem !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  min-width: 44px !important;
+  height: 54px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+.cl-otpCodeFieldInput:focus,
+[data-testid="otp-input-segment"]:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4) !important;
+}
+

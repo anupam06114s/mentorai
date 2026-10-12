@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useUser, useClerk } from "@clerk/react";
 import confetti from "canvas-confetti";
 import Auth from "./Auth";
 import {
@@ -103,6 +104,9 @@ CERTIFICATIONS
 };
 
 export default function App() {
+  const { user: clerkUser, isSignedIn: isClerkSignedIn, isLoaded: isClerkLoaded } = useUser();
+  const { signOut: clerkSignOut } = useClerk();
+
   const [page, setPage] = useState("dashboard");
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -113,6 +117,42 @@ export default function App() {
     }
     return true;
   });
+
+  // Sync Clerk authentication with backend
+  useEffect(() => {
+    if (isClerkLoaded && isClerkSignedIn && clerkUser) {
+      const email = clerkUser.primaryEmailAddress?.emailAddress || "";
+      const name = clerkUser.fullName || clerkUser.firstName || email.split("@")[0] || "User";
+      const avatar_url = clerkUser.imageUrl || "";
+
+      fetch(`${API_BASE_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, avatar_url })
+      })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.access_token) {
+            localStorage.setItem("access_token", data.access_token);
+            setUserProfile(prev => ({
+              ...prev,
+              ...data.user,
+              name: name,
+              email: email,
+              avatar_url: avatar_url || data.user?.avatar_url
+            }));
+            setIsLoggedIn(true);
+          } else {
+            setUserProfile(prev => ({ ...prev, name, email, avatar_url }));
+            setIsLoggedIn(true);
+          }
+        })
+        .catch(() => {
+          setUserProfile(prev => ({ ...prev, name, email, avatar_url }));
+          setIsLoggedIn(true);
+        });
+    }
+  }, [isClerkLoaded, isClerkSignedIn, clerkUser]);
 
   // User Profile State
   const [userProfile, setUserProfile] = useState({
@@ -477,6 +517,9 @@ export default function App() {
     fetch(`${API_BASE_URL}/auth/logout`, { method: "POST" }).catch(() => {});
     localStorage.removeItem("access_token");
     localStorage.removeItem("guest_mode");
+    try {
+      if (clerkSignOut) clerkSignOut();
+    } catch {}
     setShowLogoutConfirm(false);
     setIsLoggedIn(false);
     setPage("dashboard");
@@ -2121,7 +2164,7 @@ export default function App() {
   }
 
   // Auth gate
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isClerkSignedIn) {
     return (
       <Auth
         onLogin={(authedUser) => {

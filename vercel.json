@@ -1,23 +1,76 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd frontend && npm install --include=dev && npm run build",
-  "installCommand": "cd frontend && npm install --include=dev",
-  "outputDirectory": "frontend/dist",
+  "services": {
+    "frontend": {
+      "root": "frontend/",
+      "framework": "vite"
+    },
+    "backend": {
+      "root": "backend/",
+      "framework": "fastapi",
+      "entrypoint": "main:app"
+    }
+  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/api", "destination": "/api/index.py" },
-    { "source": "/auth/(.*)", "destination": "/api/index.py" },
-    { "source": "/auth", "destination": "/api/index.py" },
-    { "source": "/jobs/(.*)", "destination": "/api/index.py" },
-    { "source": "/jobs", "destination": "/api/index.py" },
-    { "source": "/mentor/(.*)", "destination": "/api/index.py" },
-    { "source": "/resume/(.*)", "destination": "/api/index.py" },
-    { "source": "/career/(.*)", "destination": "/api/index.py" },
-    { "source": "/interview/(.*)", "destination": "/api/index.py" },
-    { "source": "/test/(.*)", "destination": "/api/index.py" },
-    { "source": "/health", "destination": "/api/index.py" },
-    { "source": "/docs", "destination": "/api/index.py" },
-    { "source": "/openapi.json", "destination": "/api/index.py" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/api",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/auth/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/auth",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/jobs/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/jobs",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/mentor/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/resume/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/career/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/interview/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/test/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/health",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/docs",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/openapi.json",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
+    }
   ]
 }

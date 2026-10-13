@@ -6166,41 +6166,141 @@ body,
   100% { stroke-dashoffset: 0; }
 }
 
+/* Clean circular wire badge (NO PIPE TEXT) */
 .wire-badge {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 9px;
-  font-weight: 800;
-  font-family: monospace;
-  color: #64748b;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  padding: 2px 6px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+  border: 1.5px solid #e2e8f0;
+  color: #6366f1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  transition: all 0.2s ease;
+  z-index: 5;
 }
 
 .theme-dark .wire-badge {
   background: #0f172a;
   border-color: #334155;
-  color: #94a3b8;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+.wire-flow-icon {
+  animation: pulseArrow 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { transform: translateX(0); opacity: 0.8; }
+  50% { transform: translateX(2px); opacity: 1; }
+}
+
+/* Root SDE Node Specific Styling */
+.root-role-node {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.theme-dark .root-role-node {
+  border-color: rgba(139, 92, 246, 0.55);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+}
+
+.root-role-node.selected {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3), 0 12px 36px rgba(139, 92, 246, 0.3);
+}
+
+.root-capsule {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.theme-dark .root-capsule {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.root-capsule p {
+  color: #6d28d9;
+}
+
+.theme-dark .root-capsule p {
+  color: #c4b5fd;
+}
+
+.company-badge-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.theme-dark .company-badge-pill {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+/* Outcome Node Specific Styling */
+.outcome-role-node {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.theme-dark .outcome-role-node {
+  border-color: rgba(16, 185, 129, 0.55);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+}
+
+.outcome-role-node.selected {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 12px 36px rgba(16, 185, 129, 0.3);
+}
+
+.outcome-capsule {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.theme-dark .outcome-capsule {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.outcome-capsule p {
+  color: #047857;
+}
+
+.theme-dark .outcome-capsule p {
+  color: #6ee7b7;
+}
+
+.node-open-btn.outcome-btn {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.node-open-btn.outcome-btn:hover {
+  background: #059669;
 }
 
 /* 6. Floating Minimap HUD (Authentic Langflow Feature) */
 .canvas-minimap-hud {
   position: sticky;
   bottom: 16px;
-  left: calc(100% - 210px);
+  left: calc(100% - 240px);
   margin-left: auto;
   margin-right: 16px;
   margin-top: -90px;
-  width: 190px;
+  width: 220px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   border: 1.5px solid #e2e8f0;
@@ -6236,7 +6336,7 @@ body,
 .minimap-nodes-row {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .minimap-node-box {
@@ -6256,6 +6356,30 @@ body,
 .theme-dark .minimap-node-box {
   background: #1e293b;
   color: #94a3b8;
+}
+
+.minimap-node-box.root {
+  background: #ede9fe;
+  color: #7c3aed;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.theme-dark .minimap-node-box.root {
+  background: rgba(124, 58, 237, 0.25);
+  color: #c4b5fd;
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.minimap-node-box.outcome {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.theme-dark .minimap-node-box.outcome {
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.5);
 }
 
 .minimap-node-box:hover {
@@ -6288,7 +6412,7 @@ body,
 
 .minimap-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981, #6366f1);
+  background: linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981);
   transition: width 0.3s ease;
 }
 

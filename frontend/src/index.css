@@ -285,3 +285,250 @@ input[data-otp-input] {
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4) !important;
 }
 
+/* =========================================================================
+   Course Design Cards & Job Cards Theme Variables & Layout
+   ========================================================================= */
+:root {
+  --clr-blue: #1890ff;
+  --clr-green: #01c3a8;
+  --clr-orange: #ffb741;
+  --clr-red: #a63d2a;
+  --bg-dark: #232228;
+  --bg-footer: #151419;
+  --color-white: #fff;
+  --color-gray-light: #ddd;
+  --color-gray-medium: #363636;
+  --color-gray-dark: #292929;
+  --color-gray-very-dark: #222127;
+}
+
+.job-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--bg-dark);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card.green {
+  border-color: rgba(1, 195, 168, 0.3);
+}
+.card.green:hover {
+  box-shadow: 0 16px 32px -8px rgba(1, 195, 168, 0.25);
+  border-color: var(--clr-green);
+}
+.card.green .progress-bar-fill {
+  background: var(--clr-green);
+}
+.card.green .btn-apply {
+  background: linear-gradient(135deg, rgba(1, 195, 168, 0.2), rgba(1, 195, 168, 0.4));
+  border: 1px solid var(--clr-green);
+  color: #fff;
+}
+.card.green .btn-apply:hover {
+  background: var(--clr-green);
+  color: #111;
+}
+
+.card.orange {
+  border-color: rgba(255, 183, 65, 0.3);
+}
+.card.orange:hover {
+  box-shadow: 0 16px 32px -8px rgba(255, 183, 65, 0.25);
+  border-color: var(--clr-orange);
+}
+.card.orange .progress-bar-fill {
+  background: var(--clr-orange);
+}
+.card.orange .btn-apply {
+  background: linear-gradient(135deg, rgba(255, 183, 65, 0.2), rgba(255, 183, 65, 0.4));
+  border: 1px solid var(--clr-orange);
+  color: #fff;
+}
+.card.orange .btn-apply:hover {
+  background: var(--clr-orange);
+  color: #111;
+}
+
+.card.blue {
+  border-color: rgba(24, 144, 255, 0.3);
+}
+.card.blue:hover {
+  box-shadow: 0 16px 32px -8px rgba(24, 144, 255, 0.25);
+  border-color: var(--clr-blue);
+}
+.card.blue .progress-bar-fill {
+  background: var(--clr-blue);
+}
+.card.blue .btn-apply {
+  background: linear-gradient(135deg, rgba(24, 144, 255, 0.2), rgba(24, 144, 255, 0.4));
+  border: 1px solid var(--clr-blue);
+  color: #fff;
+}
+.card.blue .btn-apply:hover {
+  background: var(--clr-blue);
+  color: #fff;
+}
+
+.card.red {
+  border-color: rgba(166, 61, 42, 0.3);
+}
+.card.red:hover {
+  box-shadow: 0 16px 32px -8px rgba(166, 61, 42, 0.25);
+  border-color: var(--clr-red);
+}
+.card.red .progress-bar-fill {
+  background: var(--clr-red);
+}
+.card.red .btn-apply {
+  background: linear-gradient(135deg, rgba(166, 61, 42, 0.2), rgba(166, 61, 42, 0.4));
+  border: 1px solid var(--clr-red);
+  color: #fff;
+}
+.card.red .btn-apply:hover {
+  background: var(--clr-red);
+  color: #fff;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.card-header .date {
+  font-size: 0.8125rem;
+  color: var(--color-gray-light);
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.card-body h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.card-body p {
+  font-size: 0.825rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-body .progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-top: auto;
+}
+
+.card-body .progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #334155;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.card-body .progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-footer ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-footer ul li {
+  margin-left: -8px;
+}
+
+.card-footer ul li:first-child {
+  margin-left: 0;
+}
+
+.card-footer ul li img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-dark);
+  object-fit: cover;
+}
+
+.card-footer .btn-add {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 2px solid var(--bg-dark);
+}
+
+.card-footer .btn-countdown,
+.card-footer .btn-apply {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.card-footer .btn-apply:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+

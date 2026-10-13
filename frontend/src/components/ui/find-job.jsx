@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import confetti from "canvas-confetti";
+import Card from "./course-design-cards";
 import {
   Briefcase,
   Search,
@@ -292,54 +293,42 @@ export const FindJobModule = ({ userProfile }) => {
         </div>
       )}
 
-      {/* Hero Banner: AI Job Aggregator */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-indigo-500/20 p-6 sm:p-8 shadow-xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Top Centered Header: Available Jobs */}
+      <div className="text-center py-6 px-4">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mb-3 backdrop-blur-md">
+          <Sparkles size={14} className="text-cyan-400" />
+          <span>REAL-TIME JOB SEARCH • {jobs.length} ACTIVE VACANCIES</span>
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">Available Jobs</h1>
+        <p className="text-xs sm:text-sm text-slate-300 mt-2.5 max-w-xl mx-auto leading-relaxed">
+          Real-time verified vacancies aggregated from official Central/State Government recruitment portals & live technology industry APIs.
+        </p>
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold">
-              <Sparkles size={13} className="text-cyan-400" />
-              <span>LIVE RECRUITMENT FEED • GOVERNMENT & PRIVATE OPENINGS</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Real-Time Vacancies for{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-amber-300">
-                {userProfile?.target_role || "Career Seekers"}
-              </span>
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Live openings aggregated directly from Central/State Government official recruitment feeds (UPSC, SSC, Banking, Railways, PSUs) and global private tech APIs (Arbeitnow, Remotive).
-            </p>
+        {/* Sync / Stat row */}
+        <div className="flex items-center justify-center flex-wrap gap-3.5 mt-4">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-amber-300 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span>🏛️ Govt / PSU: <strong>{govtCount}</strong></span>
           </div>
-
-          <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 shrink-0 backdrop-blur-md">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-amber-400">{govtCount}</div>
-              <div className="text-[11px] text-amber-200/80 font-medium">🏛️ Govt / PSU</div>
-            </div>
-            <div className="h-8 w-px bg-white/15" />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-cyan-400">{privateCount}</div>
-              <div className="text-[11px] text-cyan-200/80 font-medium">🏢 Private</div>
-            </div>
-            <div className="h-8 w-px bg-white/15" />
-            <button
-              onClick={fetchJobs}
-              disabled={isLoading}
-              className="flex flex-col items-center justify-center p-1 text-slate-400 hover:text-white transition-colors"
-              title="Refresh live job feeds"
-            >
-              <RefreshCw size={18} className={`text-cyan-400 ${isLoading ? "animate-spin" : ""}`} />
-              <span className="text-[10px] mt-1 text-slate-400">Sync Live</span>
-            </button>
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-cyan-300 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span>🏢 Private Tech: <strong>{privateCount}</strong></span>
           </div>
+          <button
+            onClick={() => fetchJobs(searchTerm)}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-xs font-bold text-cyan-200 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+            title="Sync latest live vacancies in real-time"
+          >
+            <RefreshCw size={13} className={isLoading ? "animate-spin" : ""} />
+            <span>{isLoading ? "Syncing..." : "Sync Live Feed"}</span>
+          </button>
         </div>
       </div>
 
       {/* Main Sector Selector Tabs (All, Govt, Private) */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-white/15 max-w-xl">
+      <div className="flex items-center justify-center">
+        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-white/15 w-full max-w-xl">
         <button
           type="button"
           onClick={() => {
@@ -387,6 +376,7 @@ export const FindJobModule = ({ userProfile }) => {
           <Building2 size={15} />
           <span>🏢 Private ({privateCount})</span>
         </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -486,217 +476,65 @@ export const FindJobModule = ({ userProfile }) => {
         </div>
       </div>
 
-      {/* Jobs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredJobs.map((job) => {
-          const isSaved = savedJobs.includes(job.id);
-          const isApplied = appliedJobs.includes(job.id);
-          const isGovt = job.sector === "government";
-
-          return (
-            <div
-              key={job.id}
-              onClick={() => setActiveJobModal(job)}
-              style={{
-                contentVisibility: "auto",
-                containIntrinsicSize: "0 260px",
-              }}
-              className={`group relative bg-slate-900/80 hover:bg-slate-900/95 rounded-2xl p-5 shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 border ${
-                isGovt
-                  ? "border-amber-500/30 hover:border-amber-400/60 hover:shadow-amber-500/10"
-                  : "border-white/15 hover:border-cyan-500/50 hover:shadow-cyan-500/10"
-              }`}
-            >
-              <div>
-                {/* Header Row */}
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${job.logoColor || "from-slate-700 to-slate-900"} flex items-center justify-center text-white font-black text-lg shadow-md shrink-0 border border-white/20`}
-                    >
-                      {isGovt ? (
-                        <Landmark size={22} className="text-amber-200" />
-                      ) : (
-                        job.company?.charAt(0) || "P"
-                      )}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                            isGovt
-                              ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                              : "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
-                          }`}
-                        >
-                          {isGovt ? "🏛️ Central Govt / PSU" : "🏢 Private Sector"}
-                        </span>
-                        {job.category && (
-                          <span className="text-[10px] font-medium text-slate-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
-                            {job.category}
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1 mt-1">
-                        {job.title}
-                      </h3>
-                      <p className="text-xs text-slate-300 flex items-center gap-1 mt-0.5">
-                        <Building2 size={13} className="text-slate-400" />
-                        <span>{job.company}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* AI Match + Bookmark */}
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <div
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${
-                        job.matchScore >= 92
-                          ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                          : "bg-cyan-500/15 text-cyan-300 border-cyan-500/30"
-                      }`}
-                      title="AI Profile Alignment Score"
-                    >
-                      <Sparkles size={12} />
-                      <span>{job.matchScore || 90}% Match</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={(e) => handleToggleSave(job.id, e)}
-                      title={isSaved ? "Remove from saved" : "Save this opening"}
-                      className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                    >
-                      {isSaved ? (
-                        <BookmarkCheck size={16} className="text-cyan-400 fill-cyan-400/20" />
-                      ) : (
-                        <Bookmark size={16} />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Tags row: Location, Mode, Exp, Salary */}
-                <div className="flex items-center flex-wrap gap-2 text-xs text-slate-300 mb-3">
-                  <span className="flex items-center gap-1 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
-                    <MapPin size={12} className="text-cyan-400" /> {job.location}
-                  </span>
-                  <span className="flex items-center gap-1 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
-                    <Briefcase size={12} className="text-purple-400" /> {job.workMode}
-                  </span>
-                  {job.experience && (
-                    <span className="flex items-center gap-1 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
-                      <Clock size={12} className="text-amber-400" /> {job.experience}
-                    </span>
-                  )}
-                  <span
-                    className={`font-semibold px-2.5 py-1 rounded-lg border ${
-                      isGovt
-                        ? "text-amber-300 bg-amber-950/40 border-amber-500/40"
-                        : "text-emerald-400 bg-emerald-950/40 border-emerald-500/30"
-                    }`}
-                  >
-                    {job.salary}
-                  </span>
-                </div>
-
-                {/* Eligibility Pill if available */}
-                {job.eligibility && (
-                  <div className="text-[11px] text-slate-300 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl mb-3 line-clamp-1">
-                    <strong className="text-cyan-300">Eligibility:</strong> {job.eligibility}
-                  </div>
-                )}
-
-                {/* Description snippet */}
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-3">
-                  {job.description}
-                </p>
-
-                {/* Skills tags */}
-                {job.skills && job.skills.length > 0 && (
-                  <div className="flex items-center flex-wrap gap-1.5 mb-4">
-                    {job.skills.slice(0, 5).map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-800/80 border border-white/10 text-slate-300"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Card Footer */}
-              <div className="flex items-center justify-between border-t border-white/10 pt-3">
-                <span className="text-[11px] text-slate-400 flex items-center gap-1">
-                  <Clock size={12} /> {job.postedTime} • {job.applicants || 85} applicants
-                </span>
-
-                <div className="flex items-center gap-2">
-                  <a
-                    href={job.applyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-1"
-                    title="Open official recruitment portal"
-                  >
-                    <ExternalLink size={12} />
-                    <span className="hidden sm:inline">Official</span>
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={(e) => handleApply(job, e)}
-                    disabled={isApplied}
-                    className={`text-xs font-semibold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md ${
-                      isApplied
-                        ? "bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 cursor-default"
-                        : isGovt
-                        ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-amber-500/20"
-                        : "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-cyan-500/20"
-                    }`}
-                  >
-                    {isApplied ? (
-                      <>
-                        <CheckCircle2 size={13} />
-                        <span>Applied</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>1-Click Apply</span>
-                        <ArrowUpRight size={13} />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {filteredJobs.length === 0 && (
-        <div className="text-center py-12 bg-slate-900/40 border border-white/10 rounded-2xl">
-          <Briefcase size={36} className="mx-auto text-slate-500 mb-2" />
-          <h4 className="text-base font-semibold text-white">No matching jobs found</h4>
+      {/* Jobs Grid using Course Design Cards */}
+      {filteredJobs.length === 0 ? (
+        <div className="text-center py-16 bg-slate-900/60 border border-white/10 rounded-3xl">
+          <AlertCircle size={40} className="mx-auto text-amber-400 mb-3" />
+          <h3 className="text-lg font-bold text-white">No Matching Openings Found</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-            Try adjusting your search keywords, clearing location filters, or switching between Government and Private sectors.
+            Try adjusting your search keywords or clearing your filters to see more results.
           </p>
           <button
             onClick={() => {
               setSearchTerm("");
-              setSelectedSector("all");
               setSelectedCategory("All");
               setSelectedLocation("All");
               setSelectedWorkMode("All");
-              setActiveTab("all");
+              setSelectedSector("all");
             }}
-            className="mt-4 text-xs font-semibold px-4 py-2 rounded-xl bg-cyan-600/30 border border-cyan-400/40 text-cyan-300 hover:bg-cyan-600/50"
+            className="mt-4 px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 text-xs font-bold transition-colors cursor-pointer"
           >
-            Reset All Filters
+            Reset Filters
           </button>
+        </div>
+      ) : (
+        <div className="job-cards-grid">
+          {filteredJobs.map((job, idx) => {
+            const isGovt = job.sector === "government";
+            const colorClass = isGovt
+              ? idx % 2 === 0
+                ? "orange"
+                : "red"
+              : idx % 2 === 0
+              ? "green"
+              : "blue";
+
+            const cardData = {
+              id: job.id,
+              colorClass,
+              date: job.postedTime || "Active Notice",
+              title: job.title,
+              company: job.company,
+              location: job.location,
+              workMode: job.workMode,
+              sector: job.sector,
+              description: job.description,
+              progressPercent: `${job.matchScore || 85}%`,
+              progressValue: `${job.matchScore || 85}% Match`,
+              salary: job.salary,
+              skills: job.skills,
+              applyUrl: job.applyUrl,
+              countdownText: "Apply Now"
+            };
+
+            return (
+              <Card
+                key={job.id}
+                data={cardData}
+                onApply={(e) => handleApply(job, e)}
+              />
+            );
+          })}
         </div>
       )}
 

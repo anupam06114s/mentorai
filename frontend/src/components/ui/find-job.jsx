@@ -295,29 +295,31 @@ export const FindJobModule = ({ userProfile }) => {
 
       {/* Top Centered Header: Available Jobs */}
       <div className="text-center py-6 px-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mb-3 backdrop-blur-md">
-          <Sparkles size={14} className="text-cyan-400" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/10 border border-slate-900/15 text-slate-800 text-xs font-bold mb-3 backdrop-blur-md shadow-sm">
+          <Sparkles size={14} className="text-indigo-600" />
           <span>REAL-TIME JOB SEARCH • {jobs.length} ACTIVE VACANCIES</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">Available Jobs</h1>
-        <p className="text-xs sm:text-sm text-slate-300 mt-2.5 max-w-xl mx-auto leading-relaxed">
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" style={{ color: "#0f172a" }}>
+          Available Jobs
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-700 font-medium mt-2.5 max-w-xl mx-auto leading-relaxed">
           Real-time verified vacancies aggregated from official Central/State Government recruitment portals & live technology industry APIs.
         </p>
 
         {/* Sync / Stat row */}
         <div className="flex items-center justify-center flex-wrap gap-3.5 mt-4">
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-amber-300 shadow-sm">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-xs text-amber-300 shadow-md border border-slate-800">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span>🏛️ Govt / PSU: <strong>{govtCount}</strong></span>
           </div>
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-cyan-300 shadow-sm">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-xs text-cyan-300 shadow-md border border-slate-800">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             <span>🏢 Private Tech: <strong>{privateCount}</strong></span>
           </div>
           <button
             onClick={() => fetchJobs(searchTerm)}
             disabled={isLoading}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-xs font-bold text-cyan-200 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-500/40 text-xs font-bold transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95"
             title="Sync latest live vacancies in real-time"
           >
             <RefreshCw size={13} className={isLoading ? "animate-spin" : ""} />

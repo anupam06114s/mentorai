@@ -2595,7 +2595,7 @@ export default function App() {
           <button className="feature-card" onClick={() => setPage("jobs")}>
             <div className="feature-icon jobs"><Briefcase size={40} /></div>
             <ArrowUpRight className="card-arrow" size={19} />
-            <h3>Available Jobs</h3>
+            <h3>Find Job</h3>
             <span className="card-link">Open Module <span>→</span></span>
           </button>
 
@@ -2679,7 +2679,7 @@ export default function App() {
     interview: "Mock Interview",
     tests: "Mock Test",
     chat: "AI Mentor Aura Chat",
-    jobs: "Available Jobs",
+    jobs: "Find Job",
     contact: "Contact Us",
     profile: "User Profile",
   }[page] || "Dashboard";
@@ -2712,7 +2712,7 @@ export default function App() {
             { id: "interview", label: "Mock Interview", icon: Video },
             { id: "tests", label: "Mock Test", icon: Brain },
             { id: "chat", label: "AI Mentor Chat", icon: MessageSquare },
-            { id: "jobs", label: "Available Jobs", icon: Briefcase },
+            { id: "jobs", label: "Find Job", icon: Briefcase },
             { id: "contact", label: "Contact Us", icon: Mail },
           ].map(item => {
             const Icon = item.icon;
@@ -2756,7 +2756,7 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main className={`main-area ${page === "dashboard" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
+      <main className={`main-area ${page === "dashboard" || page === "jobs" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
         <header className="topbar">
           <div className="topbar-left">
             <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
@@ -2822,7 +2822,7 @@ export default function App() {
         </header>
 
         <div className={`page-content ${page === "chat" ? "page-content-chat-full" : ""}`}>
-          {page !== "dashboard" && page !== "chat" && page !== "contact" && (
+          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && (
             <div className="page-intro">
               <div>
                 <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>

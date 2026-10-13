@@ -302,9 +302,6 @@ export const FindJobModule = ({ userProfile }) => {
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" style={{ color: "#0f172a" }}>
           Available Jobs
         </h1>
-        <p className="text-xs sm:text-sm text-slate-700 font-medium mt-2.5 max-w-xl mx-auto leading-relaxed">
-          Real-time verified vacancies aggregated from official Central/State Government recruitment portals & live technology industry APIs.
-        </p>
 
         {/* Sync / Stat row */}
         <div className="flex items-center justify-center flex-wrap gap-3.5 mt-4">

@@ -21,8 +21,8 @@ const smoothEase = [0.25, 0.1, 0.25, 1] as const;
 const CONTACT_LINKS = [
   {
     icon: Mail,
-    label: "support@mentoraiaura.com",
-    href: "mailto:support@mentoraiaura.com",
+    label: "anupam@mentorai.com",
+    href: "mailto:anupam@mentorai.com",
   },
   {
     icon: Phone,
@@ -31,8 +31,8 @@ const CONTACT_LINKS = [
   },
   {
     icon: Headphones,
-    label: "support@mentoraiaura.com",
-    href: "mailto:support@mentoraiaura.com",
+    label: "anupam@mentorai.com",
+    href: "mailto:anupam@mentorai.com",
   },
 ];
 
@@ -848,7 +848,7 @@ export function ContactWithGlobe({
               </label>
               <input
                 type="email"
-                placeholder="support@mentoraiaura.com"
+                placeholder="anupam@mentorai.com"
                 className="w-full bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 outline-none focus:border-rose-400 dark:focus:border-rose-500/50 focus:ring-2 focus:ring-rose-500/10 transition-all duration-200"
               />
             </div>

@@ -10,6 +10,7 @@ import { MentorChatModule } from "./components/ui/mentor-chat";
 import ContactWithGlobe from "./components/ui/contact-with-globe";
 import FindJobModule from "./components/ui/find-job";
 import ResumeUpdaterModal from "./components/ui/resume-updater-modal";
+import { CompanyLogo } from "./components/ui/company-logo";
 import { buildEnhancedResumeData } from "./utils/resumeOptimizer";
 import Auth from "./Auth";
 import {
@@ -116,6 +117,201 @@ KEY PROJECTS
 CERTIFICATIONS
 - AWS Certified Developer Associate (2023)`
 };
+
+const DEFAULT_EXAMS = [
+  {
+    id: "google_swe",
+    title: "Google SWE Coding Assessment",
+    company: "Google",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "google",
+    description: "Google Software Engineer screening assessment testing Algorithmic problem-solving, Dynamic Programming, Graphs, and Asymptotic Complexity.",
+    subjects: ["Algorithms & DSA", "Time Complexity", "Graph Algorithms", "Dynamic Programming"]
+  },
+  {
+    id: "microsoft_codility",
+    title: "Microsoft Codility Assessment",
+    company: "Microsoft",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "microsoft",
+    description: "Microsoft technical online assessment covering Codility-style algorithmic questions, Hash Maps, Concurrency, and OOP Architecture.",
+    subjects: ["Data Structures", "Dynamic Programming", "Concurrency", "OOP Design"]
+  },
+  {
+    id: "meta_swe",
+    title: "Meta SWE Coding Challenge",
+    company: "Meta",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "meta",
+    description: "Meta (Facebook) software engineering screening covering Binary Trees, Sliding Window, Graph Traversals, and String Optimization.",
+    subjects: ["Binary Trees", "Sliding Window", "Graph BFS/DFS", "Recursion"]
+  },
+  {
+    id: "amazon_oa",
+    title: "Amazon SDE 1 Online Assessment (OA)",
+    company: "Amazon",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "amazon",
+    description: "Amazon SDE 1 Online Assessment covering Arrays, Two Pointers, Heap / Priority Queue, and Amazon Leadership Principles.",
+    subjects: ["Arrays & Strings", "Heap & Sorting", "Leadership Principles", "Tree Traversal"]
+  },
+  {
+    id: "apple_swe",
+    title: "Apple Software Engineering Challenge",
+    company: "Apple",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "apple",
+    description: "Apple technical screening testing low-level memory management, C++ / Swift fundamentals, Cache locality, and core algorithms.",
+    subjects: ["Memory Management", "Algorithms", "OS Fundamentals", "Pointer Arithmetic"]
+  },
+  {
+    id: "infosys_infytq",
+    title: "Infosys InfyTQ & Specialist Programmer",
+    company: "Infosys",
+    category: "IT & Services",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Top IT MNC",
+    logoType: "infosys",
+    description: "Infosys technical assessment testing Pseudocode interpretation, DBMS SQL, Java/Python programming, and Quantitative logic.",
+    subjects: ["Pseudocode", "DBMS & SQL", "Core Java / Python", "Mathematical Ability"]
+  },
+  {
+    id: "tcs_nqt",
+    title: "TCS NQT National Qualifier Test",
+    company: "TCS",
+    category: "IT & Services",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Top IT MNC",
+    logoType: "tcs",
+    description: "Tata Consultancy Services National Qualifier Test testing Numerical Ability, Logical Reasoning, and Technical Pseudocode.",
+    subjects: ["Numerical Ability", "Reasoning Ability", "Technical Pseudocode", "Verbal"]
+  },
+  {
+    id: "wipro_nth",
+    title: "Wipro Elite National Talent Hunt",
+    company: "Wipro",
+    category: "IT & Services",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Top IT MNC",
+    logoType: "wipro",
+    description: "Wipro campus recruitment test testing Mathematical Ability, Critical Thinking, and Core Computer Science fundamentals.",
+    subjects: ["Mathematical Ability", "Logical Reasoning", "Core CS", "English Grammar"]
+  },
+  {
+    id: "upsc_prelims",
+    title: "UPSC Civil Services Prelims (GS + CSAT)",
+    company: "UPSC",
+    category: "Government Exam",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "National UPSC",
+    logoType: "upsc",
+    description: "Union Public Service Commission Prelims assessment covering Indian Polity, Modern History, Ecology, and CSAT logical reasoning.",
+    subjects: ["Indian Polity", "Modern Indian History", "Geography & Ecology", "CSAT Aptitude"]
+  },
+  {
+    id: "ssc_cgl",
+    title: "SSC CGL / CHSL Tier 1",
+    company: "SSC",
+    category: "Government Exam",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Central Govt",
+    logoType: "ssc",
+    description: "Staff Selection Commission Combined Graduate Level examination covering Quantitative Aptitude, Reasoning, and General Awareness.",
+    subjects: ["Quantitative Aptitude", "General Intelligence & Reasoning", "General Awareness"]
+  },
+  {
+    id: "banking_exam",
+    title: "Banking PO & Clerk (SBI & IBPS)",
+    company: "SBI / IBPS",
+    category: "Government Exam",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "National Banking",
+    logoType: "sbi",
+    description: "Institute of Banking Personnel Selection & State Bank of India covering Data Interpretation, Reasoning, and Financial Awareness.",
+    subjects: ["Quantitative Aptitude", "Reasoning Ability", "Banking & Finance"]
+  },
+  {
+    id: "isro_scientist",
+    title: "ISRO Scientist / Engineer Recruitment",
+    company: "ISRO",
+    category: "Government Exam",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Premier PSU",
+    logoType: "isro",
+    description: "Indian Space Research Organisation Scientist/Engineer exam covering Computer Networks, Operating Systems, and Digital Logic.",
+    subjects: ["Computer Networks", "Operating Systems", "Computer Architecture", "Digital Logic"]
+  },
+  {
+    id: "rrb_ntpc",
+    title: "RRB Railways NTPC & Technical",
+    company: "Indian Railways",
+    category: "Government Exam",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Indian Railways",
+    logoType: "rrb",
+    description: "Railway Recruitment Board Non-Technical Categories assessment covering Mathematics, General Science, and Reasoning.",
+    subjects: ["Mathematics", "General Science", "Reasoning Ability", "Current Affairs"]
+  },
+  {
+    id: "drdo_ceptam",
+    title: "DRDO CEPTAM Senior Technical Assistant",
+    company: "DRDO",
+    category: "Government Exam",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Defence PSU",
+    logoType: "drdo",
+    description: "Defence Research and Development Organisation CEPTAM screening covering Technical Aptitude, General Awareness, and Logic.",
+    subjects: ["Technical Aptitude", "General Science", "Logical Reasoning", "Quantitative Ability"]
+  },
+  {
+    id: "python_dsa",
+    title: "Python & Data Structures Assessment",
+    company: "Tech Skill",
+    category: "Technical Skill",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Core Programming",
+    logoType: "python",
+    description: "Comprehensive technical assessment covering Python internals, complexity analysis, and algorithms.",
+    subjects: ["Python Core", "Data Structures", "Algorithms"]
+  },
+  {
+    id: "sql_dbms",
+    title: "SQL & Relational Database Assessment",
+    company: "Tech Skill",
+    category: "Technical Skill",
+    duration_minutes: 15,
+    total_marks: 50,
+    badge: "Database Engg",
+    logoType: "sql",
+    description: "Database queries, indexing, normalization, transactions, and performance optimization.",
+    subjects: ["SQL Queries", "Indexing & Transactions", "Schema Design"]
+  }
+];
 
 export default function App() {
   const { user: clerkUser, isSignedIn: isClerkSignedIn, isLoaded: isClerkLoaded } = useUser();
@@ -244,8 +440,10 @@ export default function App() {
 
   // 4. Mock Test State
   const [testView, setTestView] = useState("select"); // select | taking | result | history
-  const [allExams, setAllExams] = useState([]);
-  const [selectedExamId, setSelectedExamId] = useState("ssc_cgl");
+  const [allExams, setAllExams] = useState(DEFAULT_EXAMS);
+  const [testCategoryFilter, setTestCategoryFilter] = useState("all");
+  const [testSearchTerm, setTestSearchTerm] = useState("");
+  const [selectedExamId, setSelectedExamId] = useState("google_swe");
   const [activeTestQuestions, setActiveTestQuestions] = useState([]);
   const [activeQuestionIdx, setActiveQuestionIdx] = useState(0);
   const [testUserAnswers, setTestUserAnswers] = useState({}); // { qid: optionIdx }
@@ -2059,27 +2257,129 @@ export default function App() {
           </div>
 
           {/* Exam Selection Catalog */}
-          {testView === "select" && (
-            <div className="exam-catalog-grid">
-              {allExams.map(exam => (
-                <div key={exam.id} className="panel exam-card">
-                  <span className="exam-cat-pill">{exam.category}</span>
-                  <h3>{exam.title}</h3>
-                  <p>{exam.description}</p>
-                  <div className="exam-meta">
-                    <span><Clock size={14} /> {exam.duration_minutes} Mins</span>
-                    <span><Award size={14} /> {exam.total_marks} Marks</span>
+          {testView === "select" && (() => {
+            const bigTechCount = allExams.filter(e => e.category === "Big Tech Placement").length;
+            const govtExamCount = allExams.filter(e => e.category === "Government Exam").length;
+            const itMncCount = allExams.filter(e => e.category === "IT & Services").length;
+            const techSkillCount = allExams.filter(e => e.category === "Technical Skill").length;
+
+            const filteredExams = allExams.filter(exam => {
+              if (testCategoryFilter === "bigtech" && exam.category !== "Big Tech Placement") return false;
+              if (testCategoryFilter === "govt" && exam.category !== "Government Exam") return false;
+              if (testCategoryFilter === "it" && exam.category !== "IT & Services") return false;
+              if (testCategoryFilter === "tech" && exam.category !== "Technical Skill") return false;
+
+              if (testSearchTerm.trim()) {
+                const q = testSearchTerm.toLowerCase().trim();
+                const hay = `${exam.title} ${exam.company} ${exam.category} ${exam.description} ${(exam.subjects || []).join(" ")}`.toLowerCase();
+                if (!hay.includes(q)) return false;
+              }
+              return true;
+            });
+
+            return (
+              <div className="space-y-6">
+                {/* Search and Category Filter Bar */}
+                <div className="exam-filter-bar">
+                  <div className="exam-search-box">
+                    <Search size={16} className="search-icon" />
+                    <input
+                      type="text"
+                      value={testSearchTerm}
+                      onChange={(e) => setTestSearchTerm(e.target.value)}
+                      placeholder="Search company (Google, Microsoft, Meta, Infosys) or exam (UPSC, SSC, ISRO)..."
+                    />
                   </div>
-                  <div className="exam-subjects-pills">
-                    {exam.subjects.map((s, i) => <span key={i} className="chip">{s}</span>)}
+
+                  <div className="exam-filter-tabs">
+                    <button
+                      className={`exam-filter-tab ${testCategoryFilter === "all" ? "active" : ""}`}
+                      onClick={() => setTestCategoryFilter("all")}
+                    >
+                      All Assessments ({allExams.length})
+                    </button>
+                    <button
+                      className={`exam-filter-tab ${testCategoryFilter === "bigtech" ? "active" : ""}`}
+                      onClick={() => setTestCategoryFilter("bigtech")}
+                    >
+                      🏢 Big Tech MNCs ({bigTechCount})
+                    </button>
+                    <button
+                      className={`exam-filter-tab ${testCategoryFilter === "govt" ? "active" : ""}`}
+                      onClick={() => setTestCategoryFilter("govt")}
+                    >
+                      🏛️ Government & PSUs ({govtExamCount})
+                    </button>
+                    <button
+                      className={`exam-filter-tab ${testCategoryFilter === "it" ? "active" : ""}`}
+                      onClick={() => setTestCategoryFilter("it")}
+                    >
+                      💼 IT & Services ({itMncCount})
+                    </button>
+                    <button
+                      className={`exam-filter-tab ${testCategoryFilter === "tech" ? "active" : ""}`}
+                      onClick={() => setTestCategoryFilter("tech")}
+                    >
+                      ⚡ Tech Skills ({techSkillCount})
+                    </button>
                   </div>
-                  <button className="primary-btn" onClick={() => startMockTest(exam.id)}>
-                    Start Timed Test <Play size={15} />
-                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* Exam Cards Grid */}
+                {filteredExams.length === 0 ? (
+                  <div className="panel text-center py-12">
+                    <Brain size={36} className="mx-auto text-indigo-400 mb-2 opacity-70" />
+                    <h4 className="text-base font-bold text-slate-800">No Assessments Found</h4>
+                    <p className="text-xs text-slate-500 mt-1">Try clearing your search keyword or selecting a different category tab.</p>
+                    <button
+                      onClick={() => { setTestSearchTerm(""); setTestCategoryFilter("all"); }}
+                      className="mt-3 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 cursor-pointer"
+                    >
+                      Reset Filter
+                    </button>
+                  </div>
+                ) : (
+                  <div className="exam-catalog-grid">
+                    {filteredExams.map(exam => (
+                      <div key={exam.id} className="panel exam-card">
+                        <div className="exam-card-topbar">
+                          <span className="exam-cat-pill">{exam.category}</span>
+                          <span className="exam-badge-pill">{exam.badge || "Verified PYQ"}</span>
+                        </div>
+
+                        {/* CARD KE BEECH ME LOGO, USKE NICHE EXAM NAME */}
+                        <div className="exam-card-center-section">
+                          <div className="exam-card-logo-container">
+                            <CompanyLogo type={exam.logoType || exam.id} name={exam.company || exam.title} size={46} />
+                          </div>
+                          <span className="exam-card-company-name">{exam.company}</span>
+                          <h3 className="exam-card-title">{exam.title}</h3>
+                        </div>
+
+                        <p className="exam-card-desc">{exam.description}</p>
+
+                        <div className="exam-meta">
+                          <span><Clock size={14} /> {exam.duration_minutes} Mins</span>
+                          <span><Award size={14} /> {exam.total_marks} Marks</span>
+                          <span><Brain size={14} /> {exam.subjects?.length || 3} Core Areas</span>
+                        </div>
+
+                        <div className="exam-subjects-pills">
+                          {exam.subjects.map((s, i) => (
+                            <span key={i} className="chip">{s}</span>
+                          ))}
+                        </div>
+
+                        <button className="primary-btn exam-start-btn" onClick={() => startMockTest(exam.id)}>
+                          Start Timed Test <Play size={15} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Active Test Taking Interface */}
           {testView === "taking" && currentQ && (

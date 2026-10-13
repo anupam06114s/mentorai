@@ -4,7 +4,8 @@
   "private": true,
   "description": "Mentor AI Aura - AI Career Guidance, Resume Analyzer, Exam Prep & Mock Interview Platform",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm install --include=dev && npm run build",
+    "install": "cd frontend && npm install --include=dev",
     "dev": "npm run dev --prefix frontend"
   }
 }

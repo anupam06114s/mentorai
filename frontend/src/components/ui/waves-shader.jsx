@@ -354,7 +354,9 @@ export const WavesShader = ({ className = "", style = {} }) => {
 
     let animId = null;
     let isTabVisible = !document.hidden;
+    let isIntersecting = true;
     const startTime = performance.now();
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
       const parent = canvas.parentElement || document.body;
@@ -370,21 +372,38 @@ export const WavesShader = ({ className = "", style = {} }) => {
         canvas.width = pxW;
         canvas.height = pxH;
         gl.viewport(0, 0, pxW, pxH);
+        if (prefersReducedMotion) {
+          render();
+        }
       }
     };
 
     const handleVisibility = () => {
       isTabVisible = !document.hidden;
-      if (isTabVisible && !animId) {
+      if (isTabVisible && isIntersecting && !animId && !prefersReducedMotion) {
         render();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
     resize();
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting && isTabVisible && !animId && !prefersReducedMotion) {
+          render();
+        } else if (!isIntersecting && animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
     const render = () => {
-      if (!isTabVisible) {
+      if (!isTabVisible || !isIntersecting) {
         animId = null;
         return;
       }
@@ -403,13 +422,16 @@ export const WavesShader = ({ className = "", style = {} }) => {
       gl.uniform4f(uCursorLoc, 0.0, 2.0, 0.65, 0.46); // Cursor off: presence = 0.0
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      animId = requestAnimationFrame(render);
+      if (!prefersReducedMotion) {
+        animId = requestAnimationFrame(render);
+      }
     };
 
     render();
 
     return () => {
       if (animId) cancelAnimationFrame(animId);
+      observer.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", resize);
       gl.deleteProgram(program);

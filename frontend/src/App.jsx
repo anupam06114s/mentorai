@@ -1921,7 +1921,7 @@ export default function App() {
             <div className="panel profile-avatar-card">
               <div className="avatar-large-wrap">
                 {userProfile.avatar_url ? (
-                  <img src={userProfile.avatar_url} alt="Profile" className="avatar-img-large" />
+                  <img src={userProfile.avatar_url} alt="Profile" className="avatar-img-large" loading="lazy" decoding="async" width="120" height="120" />
                 ) : (
                   <div className="avatar-placeholder-large">
                     {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : "U"}
@@ -2228,7 +2228,7 @@ export default function App() {
           <section className="panel mentor-card">
             <div className="mentor-avatar">
               {userProfile.avatar_url ? (
-                <img src={userProfile.avatar_url} alt="User" style={{ width: "100%", height: "100%", borderRadius: "12px", objectFit: "cover" }} />
+                <img src={userProfile.avatar_url} alt="User" loading="lazy" decoding="async" width="56" height="56" style={{ width: "100%", height: "100%", borderRadius: "12px", objectFit: "cover" }} />
               ) : (
                 <Sparkles size={25} />
               )}
@@ -2340,7 +2340,7 @@ export default function App() {
 
         <div className="profile-row" onClick={() => setPage("profile")} style={{ cursor: "pointer" }}>
           {userProfile.avatar_url ? (
-            <img src={userProfile.avatar_url} alt="Avatar" className="profile-avatar-thumb" />
+            <img src={userProfile.avatar_url} alt="Avatar" className="profile-avatar-thumb" loading="lazy" decoding="async" width="36" height="36" />
           ) : (
             <div className="profile-avatar">{userProfile.name?.charAt(0).toUpperCase()}</div>
           )}
@@ -2410,7 +2410,7 @@ export default function App() {
               style={{ cursor: "pointer", overflow: "hidden" }}
             >
               {userProfile.avatar_url ? (
-                <img src={userProfile.avatar_url} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={userProfile.avatar_url} alt="Profile" loading="lazy" decoding="async" width="36" height="36" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               ) : (
                 userProfile.name?.charAt(0).toUpperCase()
               )}

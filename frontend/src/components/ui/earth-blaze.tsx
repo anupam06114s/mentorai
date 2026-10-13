@@ -337,9 +337,9 @@ function createRenderer(canvas: HTMLCanvasElement, fallback: HTMLDivElement, ini
     pulse: -1, pulseAngle: 0, clock: 0, drift: [0, 0], targetDrift: [0, 0],
     ready: false, frame: 0, last: 0, lost: false };
 
-  function listen(target: EventTarget, type: string, callback: (event: Event) => void) {
-    target.addEventListener(type, callback);
-    subscriptions.push(() => target.removeEventListener(type, callback));
+  function listen(target: EventTarget, type: string, callback: (event: Event) => void, opt?: boolean | AddEventListenerOptions) {
+    target.addEventListener(type, callback, opt);
+    subscriptions.push(() => target.removeEventListener(type, callback, opt));
   }
   function required<T>(resource: T | null): T {
     if (!resource) throw new Error("WebGL allocation failed");
@@ -539,10 +539,10 @@ function createRenderer(canvas: HTMLCanvasElement, fallback: HTMLDivElement, ini
   function rest() {
     release(false); state.target = geometry?.rest ?? 0; state.targetReveal = 0; state.targetDrift = [0, 0]; requestFrame();
   }
-  function pointer(type: string, fn: (event: PointerEvent) => void) {
-    listen(canvas, type, event => { if (options.interactive && geometry) fn(event as PointerEvent); });
+  function pointer(type: string, fn: (event: PointerEvent) => void, opt?: boolean | AddEventListenerOptions) {
+    listen(canvas, type, event => { if (options.interactive && geometry) fn(event as PointerEvent); }, opt);
   }
-  pointer("pointermove", e => { if (e.isPrimary) point(e); });
+  pointer("pointermove", e => { if (e.isPrimary) point(e); }, { passive: true });
   pointer("pointerdown", e => {
     if (!e.isPrimary || e.button !== 0) return;
     canvas.setPointerCapture(e.pointerId); canvas.focus({ preventScroll: true });
@@ -594,7 +594,7 @@ function createRenderer(canvas: HTMLCanvasElement, fallback: HTMLDivElement, ini
     if (visible) { state.last = 0; requestFrame(); } else { state.holding = false; stop(); }
   });
   resizeObserver.observe(canvas); intersection.observe(canvas);
-  listen(window, "resize", resize);
+  listen(window, "resize", resize, { passive: true });
   try { setup(); resize(); loadTexture(); } catch { fail(); }
   return {
     update(next: Options) {

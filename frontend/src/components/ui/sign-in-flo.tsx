@@ -20,7 +20,11 @@ const FloatingParticles: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
+    let isIntersecting = true;
+    let isTabVisible = !document.hidden;
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -28,10 +32,14 @@ const FloatingParticles: React.FC = () => {
       if (!canvas) return;
       width = canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
       height = canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
+      if (prefersReducedMotion) render();
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
-    const particles = Array.from({ length: 30 }, () => ({
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const particleCount = isMobile ? 12 : 28;
+
+    const particles = Array.from({ length: particleCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       size: Math.random() * 2 + 1,
@@ -41,6 +49,10 @@ const FloatingParticles: React.FC = () => {
     }));
 
     const render = () => {
+      if (!isTabVisible || !isIntersecting) {
+        animationFrameId = null;
+        return;
+      }
       ctx.clearRect(0, 0, width, height);
       particles.forEach((p) => {
         p.x += p.speedX;
@@ -55,13 +67,40 @@ const FloatingParticles: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
       });
-      animationFrameId = requestAnimationFrame(render);
+      if (!prefersReducedMotion) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
+
+    const handleVisibility = () => {
+      isTabVisible = !document.hidden;
+      if (isTabVisible && isIntersecting && !animationFrameId && !prefersReducedMotion) {
+        render();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting && isTabVisible && !animationFrameId && !prefersReducedMotion) {
+          render();
+        } else if (!isIntersecting && animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
     render();
 
     return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, []);
 

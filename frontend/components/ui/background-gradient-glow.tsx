@@ -18,6 +18,9 @@ export const BackgroundGradientGlow = ({
       <div
         className="absolute inset-0 z-0 pointer-events-none rounded-[inherit]"
         style={{
+          transform: "translateZ(0)",
+          WebkitTransform: "translateZ(0)",
+          willChange: "transform",
           background: `
             radial-gradient(ellipse 85% 65% at 8% 8%, rgba(175, 109, 255, 0.42), transparent 60%),
             radial-gradient(ellipse 75% 60% at 75% 35%, rgba(255, 235, 170, 0.55), transparent 62%),

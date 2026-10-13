@@ -100,9 +100,11 @@ export const ThinkingOrbCanvas: React.FC<{
 
     let raf = 0;
     let dead = false;
+    let isVisible = true;
     let time = 0;
     let rot = 0;
     let last = performance.now();
+    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     canvas.width = Math.round(size * dpr);
@@ -173,17 +175,38 @@ export const ThinkingOrbCanvas: React.FC<{
     };
 
     const frame = (now: number) => {
-      if (dead) return;
+      if (dead || !isVisible) return;
       const dt = Math.max(0, Math.min(0.05, (now - last) / 1000));
       last = now;
       draw(dt);
-      raf = requestAnimationFrame(frame);
+      if (!prefersReducedMotion) {
+        raf = requestAnimationFrame(frame);
+      }
     };
 
-    raf = requestAnimationFrame(frame);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !raf && !dead && !prefersReducedMotion) {
+          last = performance.now();
+          raf = requestAnimationFrame(frame);
+        } else if (!isVisible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      },
+      { rootMargin: "50px" }
+    );
+    observer.observe(canvas);
+
+    draw(0.016);
+    if (!prefersReducedMotion) {
+      raf = requestAnimationFrame(frame);
+    }
 
     return () => {
       dead = true;
+      observer.disconnect();
       if (raf) cancelAnimationFrame(raf);
     };
   }, [size, speed]);

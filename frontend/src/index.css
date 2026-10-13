@@ -73,17 +73,59 @@
 html {
   min-width: 320px;
   min-height: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  text-rendering: optimizeSpeed;
 }
 
 #root {
   min-height: 100vh;
 }
+
+/* Optimize touch response on interactive controls */
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Fluid, jank-free mobile scrolling utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Accessibility: Respect user prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 
 /* =====================================================================
    CLERK MODAL THEME CUSTOMIZATION (Matches Mentor AI Aura Main Page)

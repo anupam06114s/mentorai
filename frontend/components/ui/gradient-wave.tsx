@@ -623,8 +623,11 @@ void main() {
     this.mesh = new this.minigl.Mesh(geometry, material);
 
     this.resize();
-    window.addEventListener("resize", () => this.resize());
+    this.onResize = () => this.resize();
+    window.addEventListener("resize", this.onResize, { passive: true });
   }
+
+  onResize?: () => void;
 
   resize(): void {
     const width = window.innerWidth;
@@ -651,6 +654,7 @@ void main() {
   };
 
   start(): void {
+    if (this.isPlaying) return;
     this.isPlaying = true;
     this.animationId = requestAnimationFrame(this.animate);
   }
@@ -659,6 +663,11 @@ void main() {
     this.isPlaying = false;
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
+      this.animationId = undefined;
+    }
+    if (this.onResize) {
+      window.removeEventListener("resize", this.onResize);
+      this.onResize = undefined;
     }
   }
 }
@@ -710,6 +719,8 @@ export function GradientWave({
     });
     containerRef.current.appendChild(canvas);
 
+    let observer: IntersectionObserver | null = null;
+
     try {
       const gradient = new Gradient(canvas, colors);
       gradientRef.current = gradient;
@@ -728,12 +739,31 @@ export function GradientWave({
         ...deform,
       });
 
-      if (isPlaying) gradient.start();
+      const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (isPlaying && !prefersReducedMotion) {
+        gradient.start();
+      } else {
+        gradient.minigl.render();
+      }
+
+      observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && isPlaying && !prefersReducedMotion) {
+          gradient.start();
+        } else {
+          gradient.stop();
+        }
+      }, { rootMargin: "100px" });
+
+      if (containerRef.current) {
+        observer.observe(containerRef.current);
+      }
     } catch (error) {
       console.error("Failed to initialize gradient:", error);
     }
 
     return () => {
+      observer?.disconnect();
       gradientRef.current?.stop();
       if (containerRef.current?.contains(canvas)) {
         containerRef.current.removeChild(canvas);

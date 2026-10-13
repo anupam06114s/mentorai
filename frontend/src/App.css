@@ -3093,15 +3093,27 @@ footer {
    Background Gradient Glow (Aurora Dream Corner Whispers) - Full Background
    ========================================================================== */
 .main-area.dashboard-full-aurora-bg {
+  position: relative;
+  background: transparent !important;
+  min-height: 100vh;
+}
+
+.main-area.dashboard-full-aurora-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background: 
     radial-gradient(ellipse 85% 65% at 8% 8%, rgba(175, 109, 255, 0.42), transparent 60%),
     radial-gradient(ellipse 75% 60% at 75% 35%, rgba(255, 235, 170, 0.55), transparent 62%),
     radial-gradient(ellipse 70% 60% at 15% 80%, rgba(255, 100, 180, 0.40), transparent 62%),
     radial-gradient(ellipse 70% 60% at 92% 92%, rgba(120, 190, 255, 0.45), transparent 62%),
-    linear-gradient(180deg, #f7eaff 0%, #fde2ea 100%) !important;
-  background-attachment: fixed !important;
-  background-size: cover !important;
-  min-height: 100vh;
+    linear-gradient(180deg, #f7eaff 0%, #fde2ea 100%);
+  background-size: cover;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
 }
 
 .main-area.dashboard-full-aurora-bg .topbar {
@@ -3123,6 +3135,9 @@ footer {
   border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.12);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout style;
 }
 
 .main-area.dashboard-full-aurora-bg .feature-card:hover {
@@ -3136,6 +3151,18 @@ footer {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.7);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  contain: layout style;
+}
+
+@media (max-width: 640px) {
+  .main-area.dashboard-full-aurora-bg .feature-card,
+  .main-area.dashboard-full-aurora-bg .panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.94);
+  }
 }
 
 /* AI Mentor Chat Full Bleed Edge-to-Edge Mode */

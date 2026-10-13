@@ -145,13 +145,19 @@ const FloatingParticles: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let animId: number | null = null;
+    let isIntersecting = true;
+    let isTabVisible = !document.hidden;
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      if (prefersReducedMotion) renderFrame();
     };
 
     setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
+    window.addEventListener('resize', setCanvasSize, { passive: true });
 
     class Particle {
       x: number;
@@ -190,27 +196,66 @@ const FloatingParticles: React.FC = () => {
     }
 
     const particles: Particle[] = [];
-    const particleCount = 50;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const particleCount = isMobile ? 15 : 40;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
-    const animate = () => {
+    const renderFrame = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        particle.draw();
+      });
+    };
 
+    const animate = () => {
+      if (!isTabVisible || !isIntersecting) {
+        animId = null;
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(particle => {
         particle.update();
         particle.draw();
       });
 
-      requestAnimationFrame(animate);
+      if (!prefersReducedMotion) {
+        animId = requestAnimationFrame(animate);
+      }
     };
+
+    const handleVisibility = () => {
+      isTabVisible = !document.hidden;
+      if (isTabVisible && isIntersecting && !animId && !prefersReducedMotion) {
+        animate();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting && isTabVisible && !animId && !prefersReducedMotion) {
+          animate();
+        } else if (!isIntersecting && animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      },
+      { rootMargin: '100px' }
+    );
+    observer.observe(canvas);
 
     animate();
 
     return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', setCanvasSize);
+      if (animId) cancelAnimationFrame(animId);
     };
   }, []);
 

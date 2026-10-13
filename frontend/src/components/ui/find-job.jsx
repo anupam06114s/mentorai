@@ -497,6 +497,10 @@ export const FindJobModule = ({ userProfile }) => {
             <div
               key={job.id}
               onClick={() => setActiveJobModal(job)}
+              style={{
+                contentVisibility: "auto",
+                containIntrinsicSize: "0 260px",
+              }}
               className={`group relative bg-slate-900/80 hover:bg-slate-900/95 rounded-2xl p-5 shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer hover:-translate-y-0.5 border ${
                 isGovt
                   ? "border-amber-500/30 hover:border-amber-400/60 hover:shadow-amber-500/10"

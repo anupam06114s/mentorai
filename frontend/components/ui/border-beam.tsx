@@ -71,13 +71,23 @@ function easeCycle(phase: number): number {
 }
 
 function tick(ts: number) {
+  if (activeSet.size === 0) {
+    frameHandle = null;
+    return;
+  }
   frameHandle = requestAnimationFrame(tick);
+  if (typeof document !== 'undefined' && document.hidden) return;
   if (ts - lastTick < MIN_TICK_GAP) return;
   lastTick = ts;
 
   const tSec = ts / 1000;
 
-  activeSet.forEach(({ el, config }) => {
+  activeSet.forEach((entry) => {
+    const { el, config } = entry;
+    if (!el.isConnected) {
+      activeSet.delete(entry);
+      return;
+    }
     for (const osc of config.oscillators) {
       // Match CSS animation-delay semantics: a positive delay starts later.
       const phase = (tSec - osc.delay) / osc.period;
@@ -98,6 +108,11 @@ function tick(ts: number) {
       el.style.setProperty(prop, `${value.toFixed(2)}deg`);
     }
   });
+
+  if (activeSet.size === 0 && frameHandle != null) {
+    cancelAnimationFrame(frameHandle);
+    frameHandle = null;
+  }
 }
 
 function ensureLoop() {

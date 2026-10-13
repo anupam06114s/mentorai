@@ -14,6 +14,7 @@ import ResumeJobRecommendations from "./components/ui/resume-job-recommendations
 import { CompanyLogo } from "./components/ui/company-logo";
 import { buildEnhancedResumeData } from "./utils/resumeOptimizer";
 import Auth from "./Auth";
+import { motion } from "motion/react";
 import {
   LayoutDashboard,
   FileUser,
@@ -181,6 +182,90 @@ const DEFAULT_EXAMS = [
     subjects: ["Memory Management", "Algorithms", "OS Fundamentals", "Pointer Arithmetic"]
   },
   {
+    id: "anthropic_claude",
+    title: "Anthropic Alignment & Reasoning Challenge",
+    company: "Anthropic",
+    category: "Big Tech Placement",
+    duration_minutes: 25,
+    total_marks: 75,
+    badge: "Frontier AI Lab",
+    logoType: "anthropic",
+    description: "Screening assessment covering Large Language Model internals, Constitutional AI alignment, Reasoning logic, and Python algorithmic optimization.",
+    subjects: ["LLM Architectures", "RLHF & Constitutional AI", "Prompt Engineering", "Python DSA"]
+  },
+  {
+    id: "nvidia_cuda",
+    title: "NVIDIA CUDA & Parallel Computing OA",
+    company: "NVIDIA",
+    category: "Big Tech Placement",
+    duration_minutes: 25,
+    total_marks: 75,
+    badge: "AI Hardware Giant",
+    logoType: "nvidia",
+    description: "NVIDIA technical screening covering GPU thread hierarchy, Shared memory banking, CUDA kernels, and SIMD parallel optimization.",
+    subjects: ["CUDA Programming", "GPU Architecture", "C++ / Concurrency", "Matrix Multiplications"]
+  },
+  {
+    id: "openai_swe",
+    title: "OpenAI Deep Learning & Distributed Systems",
+    company: "OpenAI",
+    category: "Big Tech Placement",
+    duration_minutes: 25,
+    total_marks: 75,
+    badge: "Frontier AI Lab",
+    logoType: "openai",
+    description: "OpenAI software engineering assessment covering Distributed training, Attention mechanisms, Tensor sharding, and Scalable RPC pipelines.",
+    subjects: ["Transformer Models", "Distributed Systems", "Attention Mechanisms", "PyTorch Internals"]
+  },
+  {
+    id: "netflix_swe",
+    title: "Netflix Distributed Streaming Architecture",
+    company: "Netflix",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Tier-1 Big Tech",
+    logoType: "netflix",
+    description: "Netflix technical assessment covering Resilient microservices, Global distributed caching, Event-driven pipelines, and Java concurrency.",
+    subjects: ["Microservices", "Event-Driven Caching", "Java / Concurrency", "High Throughput RPC"]
+  },
+  {
+    id: "adobe_swe",
+    title: "Adobe Core Software & Algorithms OA",
+    company: "Adobe",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Top Software MNC",
+    logoType: "adobe",
+    description: "Adobe software engineering screening covering Computational geometry, Data structures, C++ design patterns, and Image rendering algorithms.",
+    subjects: ["Computational Geometry", "Data Structures", "OOP & Design Patterns", "C++ Fundamentals"]
+  },
+  {
+    id: "oracle_cloud",
+    title: "Oracle Cloud & Database Infrastructure",
+    company: "Oracle",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Top Software MNC",
+    logoType: "oracle",
+    description: "Oracle engineering assessment covering Database locking protocols, B+ trees, Distributed query processing, and Java virtual machine tuning.",
+    subjects: ["RDBMS Internals", "Distributed DB", "Core Java", "Cloud Infrastructure"]
+  },
+  {
+    id: "salesforce_dev",
+    title: "Salesforce Enterprise Architecture & Apex",
+    company: "Salesforce",
+    category: "Big Tech Placement",
+    duration_minutes: 20,
+    total_marks: 60,
+    badge: "Top Software MNC",
+    logoType: "salesforce",
+    description: "Salesforce assessment covering Multi-tenant database design, Asynchronous Apex limits, Event triggers, and SOQL query optimizations.",
+    subjects: ["Multi-Tenant Architecture", "RESTful APIs", "Apex & SOQL", "Data Modeling"]
+  },
+  {
     id: "infosys_infytq",
     title: "Infosys InfyTQ & Specialist Programmer",
     company: "Infosys",
@@ -313,6 +398,8 @@ const DEFAULT_EXAMS = [
     subjects: ["SQL Queries", "Indexing & Transactions", "Schema Design"]
   }
 ];
+
+const smoothEase = [0.25, 0.1, 0.25, 1];
 
 const VALID_PAGES = [
   "dashboard",
@@ -2329,18 +2416,56 @@ export default function App() {
 
       return (
         <section className="feature-workspace">
-          <div className="workspace-header">
-            <div className="feature-icon green"><Brain size={26} /></div>
-            <div>
-              <h2>Mock Test</h2>
-              <p>Exam preparation for Government examinations (SSC, Banking) and Corporate placement assessments.</p>
-            </div>
-            <div className="header-actions">
+          {/* Centered Mock Test Hero Section with Smooth Staggered Motion */}
+          <div className="mock-test-hero">
+            {/* Top Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: smoothEase }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-400/25 text-indigo-600 text-xs font-bold mb-4 backdrop-blur-md shadow-sm"
+            >
+              <Sparkles size={14} className="text-indigo-600" />
+              <span>COMPETITIVE EXAMS & BIG TECH ASSESSMENTS • {allExams.length} ACTIVE TESTS</span>
+            </motion.div>
+
+            {/* Middle: Mock Test Logo + Name */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.15, ease: smoothEase }}
+              className="flex flex-col items-center justify-center gap-2 mb-2"
+            >
+              <div className="mock-test-hero-logo">
+                <Brain size={38} className="text-indigo-600" />
+              </div>
+              <h1 className="mock-test-hero-title">Mock Test</h1>
+            </motion.div>
+
+            {/* "by mentor ai aura" Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.25, ease: smoothEase }}
+              className="mock-test-by-badge"
+            >
+              <span>by</span>
+              <strong>Mentor AI Aura</strong>
+              <Sparkles size={13} className="text-indigo-600" />
+            </motion.div>
+
+            {/* Navigation Switcher: Exams Catalog / Attempt History */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.35, ease: smoothEase }}
+              className="flex items-center justify-center gap-3 mb-6"
+            >
               <button
                 className={`tab-btn ${testView === "select" ? "active" : ""}`}
                 onClick={() => setTestView("select")}
               >
-                Exams Catalog
+                Exams Catalog ({allExams.length})
               </button>
               <button
                 className={`tab-btn ${testView === "history" ? "active" : ""}`}
@@ -2348,7 +2473,7 @@ export default function App() {
               >
                 Test Attempt History
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Exam Selection Catalog */}
@@ -2374,8 +2499,13 @@ export default function App() {
 
             return (
               <div className="space-y-6">
-                {/* Search and Category Filter Bar */}
-                <div className="exam-filter-bar">
+                {/* Search and Category Filter Bar Directly Below */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.85, delay: 0.44, ease: smoothEase }}
+                  className="exam-filter-bar"
+                >
                   <div className="exam-search-box">
                     <Search size={16} className="search-icon" />
                     <input
@@ -2418,11 +2548,16 @@ export default function App() {
                       ⚡ Tech Skills ({techSkillCount})
                     </button>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Exam Cards Grid */}
+                {/* Exam Cards Grid with Staggered Entrance */}
                 {filteredExams.length === 0 ? (
-                  <div className="panel text-center py-12">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: smoothEase }}
+                    className="panel text-center py-12"
+                  >
                     <Brain size={36} className="mx-auto text-indigo-400 mb-2 opacity-70" />
                     <h4 className="text-base font-bold text-slate-800">No Assessments Found</h4>
                     <p className="text-xs text-slate-500 mt-1">Try clearing your search keyword or selecting a different category tab.</p>
@@ -2432,20 +2567,30 @@ export default function App() {
                     >
                       Reset Filter
                     </button>
-                  </div>
+                  </motion.div>
                 ) : (
                   <div className="exam-catalog-grid">
-                    {filteredExams.map(exam => (
-                      <div key={exam.id} className="panel exam-card">
+                    {filteredExams.map((exam, idx) => (
+                      <motion.div
+                        key={exam.id}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.55,
+                          delay: 0.52 + Math.min(idx, 8) * 0.07,
+                          ease: smoothEase,
+                        }}
+                        className="panel exam-card"
+                      >
                         <div className="exam-card-topbar">
                           <span className="exam-cat-pill">{exam.category}</span>
                           <span className="exam-badge-pill">{exam.badge || "Verified PYQ"}</span>
                         </div>
 
-                        {/* CARD KE BEECH ME LOGO, USKE NICHE EXAM NAME */}
+                        {/* CARD KE BEECH ME OFFICIAL LOGO, USKE NICHE EXAM NAME */}
                         <div className="exam-card-center-section">
                           <div className="exam-card-logo-container">
-                            <CompanyLogo type={exam.logoType || exam.id} name={exam.company || exam.title} size={46} />
+                            <CompanyLogo type={exam.logoType || exam.id} name={exam.company || exam.title} size={52} />
                           </div>
                           <span className="exam-card-company-name">{exam.company}</span>
                           <h3 className="exam-card-title">{exam.title}</h3>
@@ -2468,7 +2613,7 @@ export default function App() {
                         <button className="primary-btn exam-start-btn" onClick={() => startMockTest(exam.id)}>
                           Start Timed Test <Play size={15} />
                         </button>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 )}
@@ -3151,7 +3296,7 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main className={`main-area ${page === "dashboard" || page === "jobs" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
+      <main className={`main-area ${page === "dashboard" || page === "jobs" || page === "tests" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
         <header className="topbar">
           <div className="topbar-left">
             <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
@@ -3217,7 +3362,7 @@ export default function App() {
         </header>
 
         <div className={`page-content ${page === "chat" ? "page-content-chat-full" : ""}`}>
-          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && (
+          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && page !== "tests" && (
             <div className="page-intro">
               <div>
                 <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>

@@ -5,6 +5,7 @@ import { BeamBorder } from "@/components/ui/border-beam";
 import { BorderBeam } from "@/components/ui/border-beam-search";
 import { EarthBlaze } from "@/components/ui/earth-blaze";
 import { BackgroundGradientGlow } from "@/components/ui/background-gradient-glow";
+import { BackgroundComponent } from "@/components/ui/background-components";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { MentorChatModule } from "./components/ui/mentor-chat";
 import ContactWithGlobe from "./components/ui/contact-with-globe";
@@ -12,9 +13,10 @@ import FindJobModule from "./components/ui/find-job";
 import ResumeUpdaterModal from "./components/ui/resume-updater-modal";
 import ResumeJobRecommendations from "./components/ui/resume-job-recommendations";
 import { CompanyLogo } from "./components/ui/company-logo";
+import { ProgressiveFluxLoader } from "./components/ui/progressive-flux-loader";
 import { buildEnhancedResumeData } from "./utils/resumeOptimizer";
 import Auth from "./Auth";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   LayoutDashboard,
   FileUser,
@@ -69,7 +71,9 @@ import {
   RotateCcw,
   AlertTriangle,
   ExternalLink,
-  ShieldCheck
+  ShieldCheck,
+  ArrowUp,
+  ChevronDown
 } from "lucide-react";
 import "./App.css";
 
@@ -86,6 +90,14 @@ const TARGET_ROLES = [
   { id: "backend_developer", label: "Backend Developer (Python/Node)" },
   { id: "ai_ml_engineer", label: "AI & Machine Learning Engineer" },
   { id: "data_analyst", label: "Data Analyst & BI Specialist" },
+];
+
+const RESUME_SCAN_PHASES = [
+  { at: 0, label: "uploading resume" },
+  { at: 25, label: "extracting credentials & history" },
+  { at: 55, label: "evaluating ats compliance" },
+  { at: 80, label: "matching role keywords & skills" },
+  { at: 100, label: "audit report complete" },
 ];
 
 const SAMPLE_RESUMES = {
@@ -562,6 +574,7 @@ export default function App() {
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeFileName, setResumeFileName] = useState("");
   const [targetRole, setTargetRole] = useState("fullstack_developer");
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [scanStep, setScanStep] = useState(0);
   const [scanProgress, setScanProgress] = useState(0);
@@ -573,6 +586,8 @@ export default function App() {
   const [showUpdateResumeModal, setShowUpdateResumeModal] = useState(false);
   const [optimizedResumeData, setOptimizedResumeData] = useState(null);
   const [isGeneratingOptimizedResume, setIsGeneratingOptimizedResume] = useState(false);
+  const resumeResultsRef = useRef(null);
+  const resumeTopRef = useRef(null);
 
   // 2. Career Guidance State
   const [careerTab, setCareerTab] = useState("roadmap"); // roadmap | saved
@@ -925,12 +940,15 @@ export default function App() {
   async function triggerAtsAnalysis(file, textContent, role = targetRole) {
     setIsAnalyzing(true);
     setScanStep(0);
-    setScanProgress(20);
+    setScanProgress(15);
     setAtsResult(null);
 
-    const t1 = setTimeout(() => { setScanStep(1); setScanProgress(45); }, 400);
-    const t2 = setTimeout(() => { setScanStep(2); setScanProgress(75); }, 800);
-    const t3 = setTimeout(() => { setScanStep(3); setScanProgress(95); }, 1300);
+    const startTime = Date.now();
+    const MIN_ANIMATION_MS = 4500; // Total loading animation time ~5.0 seconds
+
+    const t1 = setTimeout(() => { setScanStep(1); setScanProgress(35); }, 1100);
+    const t2 = setTimeout(() => { setScanStep(2); setScanProgress(65); }, 2300);
+    const t3 = setTimeout(() => { setScanStep(3); setScanProgress(88); }, 3400);
 
     const formData = new FormData();
     formData.append("job_role", role);
@@ -1034,6 +1052,13 @@ export default function App() {
         }
       }
 
+      // Ensure loading animation runs for 5 seconds for a smooth premium experience
+      const elapsed = Date.now() - startTime;
+      const remainingTime = Math.max(0, MIN_ANIMATION_MS - elapsed);
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+
       setScanProgress(100);
 
       setTimeout(() => {
@@ -1042,8 +1067,14 @@ export default function App() {
         if (data.ats_score >= 70) {
           confetti({ particleCount: 75, spread: 60, origin: { y: 0.6 } });
         }
+        setTimeout(() => {
+          resumeResultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
       }, 500);
     } catch (err) {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
       setIsAnalyzing(false);
       alert(err.message || "Error analyzing resume. Please ensure the PDF has readable text or try pasting the content directly.");
     }
@@ -1069,20 +1100,29 @@ export default function App() {
   }
 
   async function handleOpenUpdateResume() {
-    if (!atsResult) return;
     setIsGeneratingOptimizedResume(true);
     try {
-      const missingSkills = atsResult.skills?.missing || [];
+      const missingSkills = atsResult?.skills?.missing || [
+        "Docker", "Kubernetes", "AWS Cloud", "System Design", "Microservices"
+      ];
       const contentToUse =
         pastedText && pastedText.trim().length > 30
           ? pastedText
           : (resumeFileName ? "" : SAMPLE_RESUMES.fullstack);
 
+      const candidateInfo = atsResult?.extracted_info || {
+        candidate_name: userProfile?.name || "Candidate Applicant",
+        email: userProfile?.email || "candidate@example.com",
+        phone: userProfile?.phone || "+91 98765 43210",
+        education: [userProfile?.education || "Higher Education Degree"],
+        certifications: []
+      };
+
       const payload = {
         raw_text: contentToUse,
         job_role: targetRole,
         missing_skills: missingSkills,
-        extracted_info: atsResult.extracted_info || {}
+        extracted_info: candidateInfo
       };
 
       let data = null;
@@ -1107,7 +1147,7 @@ export default function App() {
           originalText: contentToUse,
           targetRole,
           missingSkills,
-          extractedInfo: atsResult.extracted_info || {}
+          extractedInfo: candidateInfo
         });
       }
 
@@ -1115,7 +1155,7 @@ export default function App() {
       setShowUpdateResumeModal(true);
     } catch (err) {
       console.error(err);
-      alert("Could not update resume. Please try again.");
+      alert("Could not update or create resume. Please try again.");
     } finally {
       setIsGeneratingOptimizedResume(false);
     }
@@ -1339,14 +1379,53 @@ export default function App() {
       const scoreColor = score >= 75 ? "#10b981" : score >= 60 ? "#f59e0b" : "#ef4444";
 
       return (
-        <section className="feature-workspace">
-          <div className="workspace-header">
-            <div className="feature-icon purple"><FileUser size={26} /></div>
-            <div>
-              <h2>Resume Analyzer</h2>
-              <p>AI-powered PDF resume scanner, ATS compliance evaluator, and keyword optimization engine.</p>
-            </div>
-            <div className="header-actions">
+        <section className="feature-workspace relative z-10 w-full">
+          <div ref={resumeTopRef} id="resume-top" />
+          {/* Centered Resume Analyzer Hero Section */}
+          <div className="resume-hero-centered">
+            {/* Top Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: smoothEase }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-400/25 text-purple-700 text-xs font-bold mb-3 backdrop-blur-md shadow-sm"
+            >
+              <Sparkles size={14} className="text-purple-600" />
+              <span>AI-POWERED PDF RESUME SCANNER & ATS COMPLIANCE EVALUATOR</span>
+            </motion.div>
+
+            {/* Middle: Logo + Resume Analyzer Name */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.12, ease: smoothEase }}
+              className="flex flex-col items-center justify-center gap-2 mb-2 text-center"
+            >
+              <div className="resume-hero-logo">
+                <FileUser size={38} className="text-purple-600" />
+              </div>
+              <h1 className="resume-hero-title">Resume Analyzer</h1>
+            </motion.div>
+
+            {/* "by mentor ai aura" Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.22, ease: smoothEase }}
+              className="mock-test-by-badge mb-5"
+            >
+              <span>by</span>
+              <strong style={{ color: "#7c3aed" }}>Mentor AI Aura</strong>
+              <Sparkles size={13} style={{ color: "#7c3aed" }} />
+            </motion.div>
+
+            {/* Tab Actions: Scan Resume & Previous Analyses */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.32, ease: smoothEase }}
+              className="flex items-center justify-center gap-3 mb-6"
+            >
               <button
                 className={`tab-btn ${resumeTab === "analyze" ? "active" : ""}`}
                 onClick={() => setResumeTab("analyze")}
@@ -1359,11 +1438,16 @@ export default function App() {
               >
                 Previous Analyses ({resumeHistory.length})
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {resumeTab === "history" ? (
-            <div className="panel history-panel">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.42, ease: smoothEase }}
+              className="panel history-panel"
+            >
               <div className="history-head">
                 <h3>Saved Resume Analyses History</h3>
                 <p>Review past audit results and track how your ATS scores have improved over time.</p>
@@ -1372,8 +1456,14 @@ export default function App() {
                 <p className="muted" style={{ padding: "20px 0" }}>No saved resume analyses found. Upload your first resume to generate history!</p>
               ) : (
                 <div className="history-list">
-                  {resumeHistory.map(item => (
-                    <div key={item.id} className="history-row">
+                  {resumeHistory.map((item, idx) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, x: -14 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.48 + idx * 0.08, ease: smoothEase }}
+                      className="history-row"
+                    >
                       <div className="h-score-badge" style={{ backgroundColor: `${item.ats_score >= 70 ? "#10b981" : "#f59e0b"}20`, color: item.ats_score >= 70 ? "#10b981" : "#f59e0b" }}>
                         <strong>{item.ats_score}</strong>
                         <small>ATS</small>
@@ -1391,126 +1481,236 @@ export default function App() {
                       >
                         View Analysis <ArrowRight size={14} />
                       </button>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           ) : (
             <>
-              {/* Upload Card */}
+              {/* Upload Card with Animated Glowing BeamBorder & Smooth Staggered Load */}
               {!atsResult && !isAnalyzing && (
-                <div className="panel upload-card">
-                  <div
-                    className={`upload-zone ${dragActive ? "drag-active" : ""}`}
-                    onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-                    onDragLeave={() => setDragActive(false)}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      setDragActive(false);
-                      const file = e.dataTransfer.files?.[0];
-                      if (file) {
-                        setResumeFile(file);
-                        setResumeFileName(file.name);
-                        triggerAtsAnalysis(file, "", targetRole);
-                      }
-                    }}
+                <motion.div
+                  initial={{ opacity: 0, y: 28 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.95, delay: 0.44, ease: smoothEase }}
+                  className="upload-box-glowing-container max-w-[840px] mx-auto mb-8"
+                >
+                  <BeamBorder
+                    size="md"
+                    colorVariant="colorful"
+                    theme="light"
+                    active={true}
+                    strength={1.6}
+                    duration={3.5}
+                    beamWidth={2.5}
+                    borderRadius={24}
+                    className="w-full rounded-3xl overflow-hidden shadow-2xl"
                   >
-                    <div className="upload-icon-pulse"><Upload size={38} /></div>
-                    <strong>Upload your resume in PDF format</strong>
-                    <span>Extracts education, skills, projects & certifications • Instant ATS Evaluation</span>
-                    <label className="browse-btn">
-                      Choose PDF Resume
-                      <input
-                        type="file"
-                        accept=".pdf,.docx,.txt"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
+                    <div className="panel upload-card bg-white/95 backdrop-blur-xl border border-purple-200/50 m-0 shadow-none">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.75, delay: 0.52, ease: smoothEase }}
+                        className={`upload-zone upload-zone-glowing ${dragActive ? "drag-active" : ""}`}
+                        onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                        onDragLeave={() => setDragActive(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setDragActive(false);
+                          const file = e.dataTransfer.files?.[0];
                           if (file) {
                             setResumeFile(file);
                             setResumeFileName(file.name);
                             triggerAtsAnalysis(file, "", targetRole);
                           }
                         }}
-                        style={{ display: "none" }}
-                      />
-                    </label>
-                  </div>
-
-                  <div className="role-selector-row">
-                    <span className="field-hint"><Target size={16} /> Target Job Role for Skills Matching:</span>
-                    <select
-                      className="role-dropdown"
-                      value={targetRole}
-                      onChange={(e) => {
-                        setTargetRole(e.target.value);
-                        if (resumeFile || pastedText) triggerAtsAnalysis(resumeFile, pastedText, e.target.value);
-                      }}
-                    >
-                      {TARGET_ROLES.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="quick-sample-row">
-                    <button
-                      className="secondary-btn"
-                      onClick={() => {
-                        setResumeFileName("Alex_Candidate_Resume.pdf");
-                        setPastedText(SAMPLE_RESUMES.fullstack);
-                        triggerAtsAnalysis(null, SAMPLE_RESUMES.fullstack, targetRole);
-                      }}
-                    >
-                      <Sparkles size={15} /> Try Sample Resume (Full Stack)
-                    </button>
-                    <button className="link-btn" onClick={() => setRawTextMode(!rawTextMode)}>
-                      <FileText size={15} /> {rawTextMode ? "Hide Paste Area" : "Or Paste Resume Content"}
-                    </button>
-                  </div>
-
-                  {rawTextMode && (
-                    <div className="paste-area-box">
-                      <textarea
-                        rows={6}
-                        placeholder="Paste resume text directly here..."
-                        value={pastedText}
-                        onChange={(e) => setPastedText(e.target.value)}
-                      />
-                      <button
-                        className="primary-btn"
-                        onClick={() => {
-                          if (!pastedText.trim()) return alert("Please paste resume text.");
-                          triggerAtsAnalysis(null, pastedText, targetRole);
-                        }}
                       >
-                        Analyze Pasted Content <ArrowUpRight size={16} />
-                      </button>
+                        <div className="upload-icon-pulse"><Upload size={36} /></div>
+                        <h3 className="upload-title">Upload your resume in PDF format</h3>
+                        <p className="upload-subtitle">Extracts education, skills, projects & certifications • Instant ATS Evaluation</p>
+                        <label className="browse-btn">
+                          <Upload size={16} />
+                          <span>Choose PDF Resume</span>
+                          <input
+                            type="file"
+                            accept=".pdf,.docx,.txt"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                setResumeFile(file);
+                                setResumeFileName(file.name);
+                                triggerAtsAnalysis(file, "", targetRole);
+                              }
+                            }}
+                            style={{ display: "none" }}
+                          />
+                        </label>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.75, delay: 0.62, ease: smoothEase }}
+                        className={`target-role-single-line ${isRoleDropdownOpen ? "expanded" : ""}`}
+                      >
+                        <div className="target-role-single-line-bar">
+                          <div className="target-role-label">
+                            <span className="target-icon-badge">
+                              <Target size={17} />
+                            </span>
+                            <span>Target Job Skill Matching:</span>
+                          </div>
+
+                          <button
+                            type="button"
+                            className={`target-role-select-trigger ${isRoleDropdownOpen ? "open" : ""}`}
+                            onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                            aria-expanded={isRoleDropdownOpen}
+                          >
+                            <div className="target-trigger-left">
+                              <span className="target-role-pill-icon">
+                                <Briefcase size={14} />
+                              </span>
+                              <span className="target-role-active-label">
+                                {TARGET_ROLES.find(r => r.id === targetRole)?.label || "Select Target Role"}
+                              </span>
+                            </div>
+                            <ChevronDown
+                              size={17}
+                              className={`target-role-chevron ${isRoleDropdownOpen ? "rotated" : ""}`}
+                            />
+                          </button>
+                        </div>
+
+                        <AnimatePresence>
+                          {isRoleDropdownOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                              animate={{ opacity: 1, height: "auto", marginTop: 14 }}
+                              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                              className="target-roles-expanded-panel"
+                            >
+                              <div className="target-roles-grid">
+                                {TARGET_ROLES.map((r) => {
+                                  const isSelected = r.id === targetRole;
+                                  return (
+                                    <button
+                                      key={r.id}
+                                      type="button"
+                                      className={`target-role-option-card ${isSelected ? "selected" : ""}`}
+                                      onClick={() => {
+                                        setTargetRole(r.id);
+                                        setIsRoleDropdownOpen(false);
+                                        if (resumeFile || pastedText) triggerAtsAnalysis(resumeFile, pastedText, r.id);
+                                      }}
+                                    >
+                                      <div className="target-role-option-left">
+                                        <span className={`target-role-option-dot ${isSelected ? "active" : ""}`} />
+                                        <span className="target-role-option-name">{r.label}</span>
+                                      </div>
+                                      {isSelected ? (
+                                        <span className="target-role-option-badge">
+                                          <Check size={13} /> Active
+                                        </span>
+                                      ) : (
+                                        <span className="target-role-select-hint">Select</span>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.75, delay: 0.68, ease: smoothEase }}
+                        className="no-resume-cta-row"
+                      >
+                        <span className="no-resume-text">Don't have a resume?</span>
+                        <button
+                          type="button"
+                          className="create-new-resume-btn"
+                          onClick={handleOpenUpdateResume}
+                          disabled={isGeneratingOptimizedResume}
+                        >
+                          <Sparkles size={14} />
+                          <span>{isGeneratingOptimizedResume ? "Creating..." : "Create New Resume"}</span>
+                          <ArrowRight size={13} />
+                        </button>
+                      </motion.div>
                     </div>
-                  )}
-                </div>
+                  </BeamBorder>
+                </motion.div>
               )}
 
-              {/* Scanning Animation */}
+              {/* Scanning Animation using ProgressiveFluxLoader */}
               {isAnalyzing && (
-                <div className="panel scanning-panel">
-                  <div className="radar-scanner"><Sparkles className="pulse-sparkle" size={42} /></div>
-                  <h3>Evaluating Resume Quality & ATS Compliance...</h3>
-                  <div className="scan-progress-bar">
-                    <div className="scan-progress-fill" style={{ width: `${scanProgress}%` }} />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.7, ease: smoothEase }}
+                  className="flux-scanner-card"
+                >
+                  <div className="flux-scanner-glow" />
+
+                  <div className="flux-scanner-header">
+                    <div className="flux-scanner-badge">
+                      <Sparkles size={13} /> AI Resume Analyzer
+                    </div>
+                    <h3>Evaluating Resume Quality & ATS Compliance</h3>
+                    <p>Scanning technical credentials against {targetRole.replace(/_/g, " ")} benchmarks</p>
                   </div>
-                  <ul className="scan-steps-list">
-                    <li className={scanStep >= 0 ? "active" : ""}><CheckCircle2 size={16} /> Extracting contact, education, and credentials</li>
-                    <li className={scanStep >= 1 ? "active" : ""}><CheckCircle2 size={16} /> Analyzing technical skills against {targetRole.replace(/_/g, " ")}</li>
-                    <li className={scanStep >= 2 ? "active" : ""}><CheckCircle2 size={16} /> Detecting unclear descriptions & quantifiable metrics</li>
-                    <li className={scanStep >= 3 ? "active" : ""}><CheckCircle2 size={16} /> Compiling quality assessment and next steps</li>
-                  </ul>
-                </div>
+
+                  <ProgressiveFluxLoader
+                    value={scanProgress}
+                    phases={RESUME_SCAN_PHASES}
+                    gradient="linear-gradient(90deg, #6366f1 0%, #8b5cf6 35%, #06b6d4 55%, #8b5cf6 78%, #6366f1 100%)"
+                    barClassName="h-5 rounded-full shadow-[0_0_24px_rgba(139,92,246,0.35)]"
+                    textClassName="text-2xl sm:text-3xl font-extrabold text-purple-700 tracking-tight capitalize"
+                  />
+
+                  <div className="flux-steps-summary">
+                    <div className={`flux-step-pill ${scanStep > 0 ? "completed" : scanStep === 0 ? "active" : ""}`}>
+                      <CheckCircle2 size={14} /> Text Extraction
+                    </div>
+                    <div className={`flux-step-pill ${scanStep > 1 ? "completed" : scanStep === 1 ? "active" : ""}`}>
+                      <CheckCircle2 size={14} /> Skills Mapping
+                    </div>
+                    <div className={`flux-step-pill ${scanStep > 2 ? "completed" : scanStep === 2 ? "active" : ""}`}>
+                      <CheckCircle2 size={14} /> Metrics Audit
+                    </div>
+                    <div className={`flux-step-pill ${scanStep >= 3 ? "completed" : ""}`}>
+                      <CheckCircle2 size={14} /> Report Complete
+                    </div>
+                  </div>
+                </motion.div>
               )}
 
               {/* Results Dashboard */}
               {atsResult && !isAnalyzing && (
-                <div className="ats-results-container">
-                  {/* Summary Banner */}
-                  <div className="panel ats-summary-banner">
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.85, delay: 0.15, ease: smoothEase }}
+                  className="ats-results-container"
+                >
+                  {/* Smooth Scroll Target for Auto-Scroll */}
+                  <div ref={resumeResultsRef} className="ats-results-scroll-target" />
+
+                  {/* Summary Banner with Smooth Scroll Reveal */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 22 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.8, ease: smoothEase }}
+                    className="panel ats-summary-banner"
+                  >
                     <div className="score-radial-block">
                       <svg className="radial-svg" viewBox="0 0 100 100">
                         <circle className="radial-bg" cx="50" cy="50" r="42" />
@@ -1560,10 +1760,16 @@ export default function App() {
                         <RefreshCw size={14} /> Re-scan Another
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  {/* 5-Pillar ATS Diagnostic Grid */}
-                  <div className="ats-pillars-grid">
+                  {/* 5-Pillar ATS Diagnostic Grid with Smooth Scroll Reveal */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 22 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.8, delay: 0.1, ease: smoothEase }}
+                    className="ats-pillars-grid"
+                  >
                     <div className="ats-pillar-card">
                       <div className="pillar-header">
                         <span>ATS Compliance</span>
@@ -1637,7 +1843,7 @@ export default function App() {
                       </div>
                       <span className="pillar-caption">{atsResult.word_count || 0} words • Optimal length</span>
                     </div>
-                  </div>
+                  </motion.div>
 
                   <ResumeJobRecommendations atsResult={atsResult} />
 
@@ -1864,8 +2070,12 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Final Update & Download Banner Card */}
-                  <div
+                  {/* Final Update & Download Banner Card with Smooth Scroll Reveal */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.8, ease: smoothEase }}
                     className="panel"
                     style={{
                       textAlign: "center",
@@ -1896,8 +2106,24 @@ export default function App() {
                       <Sparkles size={17} />
                       {isGeneratingOptimizedResume ? "Updating Resume..." : "⚡ Update Resume & Download PDF"}
                     </button>
-                  </div>
-                </div>
+                  </motion.div>
+
+                  {/* Floating Smooth Scroll Back to Top Button */}
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="resume-scroll-top-btn"
+                    onClick={() => {
+                      resumeTopRef.current?.scrollIntoView({ behavior: "smooth" }) ||
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    title="Scroll smoothly back to top"
+                  >
+                    <ArrowUp size={15} /> Back to Top
+                  </motion.button>
+                </motion.div>
               )}
             </>
           )}
@@ -3296,7 +3522,7 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main className={`main-area ${page === "dashboard" || page === "jobs" || page === "tests" ? "dashboard-full-aurora-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
+      <main className={`main-area ${page === "dashboard" || page === "jobs" || page === "tests" ? "dashboard-full-aurora-bg" : ""} ${page === "resume" ? "resume-full-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
         <header className="topbar">
           <div className="topbar-left">
             <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
@@ -3362,7 +3588,7 @@ export default function App() {
         </header>
 
         <div className={`page-content ${page === "chat" ? "page-content-chat-full" : ""}`}>
-          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && page !== "tests" && (
+          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && page !== "tests" && page !== "resume" && (
             <div className="page-intro">
               <div>
                 <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>

@@ -393,8 +393,8 @@ def remove_profile_photo(
 # =====================================================================
 @app.post("/api/resume/analyze")
 async def analyze_resume_endpoint(
-    file: UploadFile = File(None),
-    raw_text: str = Form(""),
+    file: Optional[UploadFile] = File(None),
+    raw_text: Optional[str] = Form(""),
     job_role: str = Form("fullstack_developer"),
     user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
@@ -404,15 +404,18 @@ async def analyze_resume_endpoint(
 
     if file and file.filename:
         filename = file.filename
-        content = await file.read()
-        extracted_text = extract_text_from_file(file.filename, content)
+        try:
+            content = await file.read()
+            extracted_text = extract_text_from_file(file.filename, content)
+        except Exception:
+            extracted_text = ""
     elif raw_text:
         extracted_text = raw_text
 
-    if not extracted_text.strip():
+    if not extracted_text or not extracted_text.strip():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No readable resume content found. Please upload a PDF, DOCX, or TXT file."
+            detail="We could not read text from the uploaded PDF. Please ensure the PDF has selectable text (not a flat image scan) or paste the content directly."
         )
 
     result = analyze_resume_text(extracted_text, target_role=job_role)

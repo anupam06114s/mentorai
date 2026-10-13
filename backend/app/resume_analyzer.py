@@ -65,19 +65,65 @@ WEAK_PHRASES = [
 ]
 
 def extract_text_from_pdf(file_bytes: bytes) -> str:
-    """Extract text from PDF using pypdf."""
-    if not PdfReader:
-        return ""
-    try:
-        reader = PdfReader(io.BytesIO(file_bytes))
-        extracted = []
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                extracted.append(text)
-        return "\n".join(extracted)
-    except Exception as e:
-        return f"[PDF parsing error: {e}]"
+    """Extract text from PDF using pypdf with robust fallbacks for compressed/scanned streams."""
+    extracted_text = ""
+
+    # Method 1: pypdf reader
+    if PdfReader:
+        try:
+            reader = PdfReader(io.BytesIO(file_bytes))
+            extracted = []
+            for page in reader.pages:
+                try:
+                    text = page.extract_text()
+                    if text and text.strip():
+                        extracted.append(text.strip())
+                except Exception:
+                    continue
+            if extracted:
+                extracted_text = "\n\n".join(extracted)
+        except Exception:
+            pass
+
+    # Method 2: zlib decompression for FlateDecode streams if pypdf was empty
+    if not extracted_text.strip():
+        try:
+            import zlib
+            stream_pattern = re.compile(rb'stream[\r\n]+(.*?)[\r\n]+endstream', re.DOTALL)
+            decoded_chunks = []
+            for match in stream_pattern.finditer(file_bytes):
+                data = match.group(1)
+                decompressed = None
+                try:
+                    decompressed = zlib.decompress(data)
+                except Exception:
+                    try:
+                        decompressed = zlib.decompress(data, -zlib.MAX_WBITS)
+                    except Exception:
+                        pass
+                if decompressed:
+                    text_tokens = re.findall(rb'\(([^\)\\]*(?:\\.[^\)\\]*)*)\)', decompressed)
+                    for token in text_tokens:
+                        clean_token = token.decode("latin-1", errors="ignore").strip()
+                        if len(clean_token) > 1 and not clean_token.startswith("/"):
+                            decoded_chunks.append(clean_token)
+            if decoded_chunks:
+                extracted_text = " ".join(decoded_chunks)
+        except Exception:
+            pass
+
+    # Method 3: Raw string run extraction if still empty
+    if not extracted_text.strip():
+        try:
+            runs = re.findall(rb'[A-Za-z0-9@.,_/\-+(): ]{4,}', file_bytes)
+            ignore_keywords = {b'/Type', b'/Pages', b'/Font', b'/MediaBox', b'/Catalog', b'/Resources', b'/Length', b'xref', b'trailer'}
+            usable = [r.decode("latin-1", errors="ignore") for r in runs if not any(k in r for k in ignore_keywords)]
+            if usable:
+                extracted_text = " ".join(usable)
+        except Exception:
+            pass
+
+    return extracted_text.strip()
 
 def extract_text_from_file(filename: str, file_bytes: bytes) -> str:
     """Extract text based on file format."""

@@ -42,6 +42,76 @@ import {
   Zap
 } from "lucide-react";
 
+// Dynamic Role-Specific AI Architecture Advice
+const ROLE_ARCHITECTURE_ADVICE = {
+  software_developer: {
+    advice:
+      "Anchor on object-oriented system design and strict algorithmic complexity. Solve 120+ LeetCode mediums and build a multi-threaded, low-latency client-server engine to pass top-tier FAANG engineering screening.",
+    keyMetric: "120+ Blind 75 Mediums",
+    focusPill: "Core OOP & Low-Level Design",
+  },
+  frontend_developer: {
+    advice:
+      "Prioritize Core Web Vitals (LCP < 2.5s, CLS < 0.1), SSR/SSG with Next.js 15, and accessible design token systems. Deliver interactive production web apps with zero layout shift and 95+ Lighthouse scores.",
+    keyMetric: "Lighthouse 95+ Score",
+    focusPill: "Core Web Vitals & Next.js",
+  },
+  backend_developer: {
+    advice:
+      "Focus on high-throughput microservices, ACID transaction isolation levels, Redis write-through caching, and idempotent event queues (Kafka/RabbitMQ) for 99.99% system availability.",
+    keyMetric: "Sub-50ms API Latency",
+    focusPill: "Microservices & Distributed Systems",
+  },
+  fullstack_developer: {
+    advice:
+      "Build end-to-end type-safe architectures with TypeScript, PostgreSQL, and Docker. Deliver monolithic to decoupled microservices capstones with complete CI/CD test automation.",
+    keyMetric: "End-to-End Type Safety",
+    focusPill: "Full-Stack CI/CD & Cloud Deploy",
+  },
+  data_analyst: {
+    advice:
+      "Master advanced SQL window functions (PARTITION BY, CTEs), data storytelling with Tableau/Power BI, and automated Python ETL pipelines to convert complex raw data into executive business ROI.",
+    keyMetric: "Executive Decision Storytelling",
+    focusPill: "SQL Analytics & ETL Pipelines",
+  },
+  bi_specialist: {
+    advice:
+      "Design Star & Snowflake dimensional schemas in dbt and BigQuery. Implement automated incremental semantic models and executive C-suite KPI metrics dashboards.",
+    keyMetric: "Sub-Second BI Queries",
+    focusPill: "Dimensional Modeling & dbt",
+  },
+  aiml_engineer: {
+    advice:
+      "Anchor on statistical learning, PyTorch transformer architectures, model quantization (GGUF/vLLM), and scalable MLOps inference pipelines with low-latency GPU serving.",
+    keyMetric: "Production Model Inference",
+    focusPill: "Transformers & MLOps Serving",
+  },
+  devops_engineer: {
+    advice:
+      "Enforce Infrastructure as Code (Terraform), Kubernetes cluster orchestration with Helm, GitOps CI/CD pipelines, and 24/7 observability with Prometheus/Grafana.",
+    keyMetric: "Zero-Downtime Releases",
+    focusPill: "Kubernetes & GitOps CI/CD",
+  },
+  cybersecurity: {
+    advice:
+      "Master OWASP Top 10 vulnerabilities, Wireshark network packet inspection, Linux kernel privilege escalation, and zero-trust SIEM log analysis for defensive and offensive security.",
+    keyMetric: "Zero-Trust Threat Defense",
+    focusPill: "PenTesting & SIEM Analysis",
+  },
+  mobile_developer: {
+    advice:
+      "Build silky 60fps Flutter/React Native/Swift apps with offline-first SQLite/Realm sync, biometric authentication, and strict App Store / Play Store deployment hygiene.",
+    keyMetric: "60fps Silky App Experience",
+    focusPill: "Offline-First & Native Performance",
+  },
+  ui_ux_designer: {
+    advice:
+      "Build scalable multi-brand Figma design token systems, conduct qualitative user empathy interviews, and ship production-ready interactive micro-animation prototypes.",
+    keyMetric: "Design System Tokens",
+    focusPill: "Design Systems & User Empathy",
+  },
+};
+
 // Distinct color identities for Langflow node categories
 const NODE_CATEGORIES = [
   {
@@ -101,7 +171,7 @@ export function LangflowCareerGuide({
   onStartInterview,
 }) {
   // activeNodeIndex:
-  // 0 = Root Origin Node (SDE Master Node)
+  // 0 = Root Origin Node for current track
   // 1..steps.length = Phase steps (steps[activeNodeIndex - 1])
   // steps.length + 1 = Target Placement / Outcome Node
   const [activeNodeIndex, setActiveNodeIndex] = useState(0);
@@ -130,6 +200,14 @@ export function LangflowCareerGuide({
   const activeCategory = NODE_CATEGORIES[activePhaseIdx % NODE_CATEGORIES.length];
 
   const RoleIcon = roleData.icon || Code2;
+  const roleShortName = roleData.shortTitle || roleData.title;
+
+  // Custom AI Architecture advice specific to this job
+  const currentRoleAdvice = ROLE_ARCHITECTURE_ADVICE[roleData.id] || {
+    advice: `Target Track: ${roleData.title}. Complete Phase 01 & 02 deliverables before submitting senior applications. Ensure every checkpoint is committed to GitHub with automated CI tests.`,
+    keyMetric: "Milestone Verified",
+    focusPill: `${roleShortName} Fundamentals`,
+  };
 
   // Calculate live completion progress based on checked topics
   const totalTopics = steps.reduce((acc, s) => acc + (s.focus?.length || 0), 0);
@@ -152,7 +230,7 @@ export function LangflowCareerGuide({
     }
   };
 
-  // Run Flow Simulation: Starts at SDE Root Node -> Phase 1..N -> Final Outcome Node
+  // Run Flow Simulation: Starts at Root Node -> Phase 1..N -> Final Outcome Node
   const handleRunFlow = () => {
     if (isRunningFlow) return;
     setIsRunningFlow(true);
@@ -210,7 +288,7 @@ export function LangflowCareerGuide({
   // Generate Langflow-style Python code snippet
   const pythonDagSnippet = `# =========================================================
 # Langflow Graph Definition: ${roleData.title}
-# Origin Node: ${roleData.shortTitle || roleData.title}
+# Origin Node: ${roleShortName}
 # Generated by MentorPilot AI Architecture Engine
 # =========================================================
 
@@ -447,7 +525,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                 >
                   <span className="palette-node-dot" style={{ background: "#8b5cf6" }} />
                   <Target size={13} className="text-purple-400" />
-                  <span className="palette-node-name">Role Initiator</span>
+                  <span className="palette-node-name">{roleShortName} Origin</span>
                 </div>
 
                 {NODE_CATEGORIES.map((cat, ci) => {
@@ -533,27 +611,29 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
             className="langflow-canvas-inner"
             style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top left" }}
           >
-            {/* Sticky Architecture Note on Canvas (Langflow Style) */}
+            {/* Sticky Architecture Note on Canvas (Dynamic per Job) */}
             <div className="canvas-sticky-note">
               <div className="note-tape" />
               <div className="note-header">
                 <Sparkles size={13} className="text-amber-600" />
-                <strong>AI ARCHITECTURE ADVICE</strong>
+                <strong>AI ARCHITECTURE ADVICE: {roleShortName.toUpperCase()}</strong>
               </div>
               <p>
-                Target Track: <strong>{roleData.title}</strong>. SDE Root Node initiates the pipeline. Complete every milestone deliverable to unlock FAANG clearance.
+                {currentRoleAdvice.advice}
               </p>
               <div className="note-meta">
-                <span>Expected: {roleData.salaryIn}</span>
+                <span>Target: {roleData.salaryIn}</span>
                 <span>•</span>
                 <span>{roleData.timeToReady}</span>
+                <span>•</span>
+                <span className="font-extrabold text-amber-900 dark:text-amber-200">{currentRoleAdvice.keyMetric}</span>
               </div>
             </div>
 
             {/* GRAPH OF CONNECTED NODES (ROOT NODE -> PHASES 1..N -> DESTINATION NODE) */}
             <div className="langflow-graph-layout">
               {/* ========================================================
-                  1. ROOT ROLE INITIATOR NODE (SDE Master Node)
+                  1. ROOT ROLE INITIATOR NODE (Dynamic per Career Track)
                   ======================================================== */}
               <div className="langflow-node-wrapper root-node-wrapper">
                 <motion.div
@@ -596,10 +676,10 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                             border: "1px solid rgba(139, 92, 246, 0.3)",
                           }}
                         >
-                          ROOT INITIATOR // TRACK
+                          ROOT INITIATOR // {roleShortName.toUpperCase()}
                         </span>
                       </div>
-                      <h4 className="node-title font-black">{roleData.title}</h4>
+                      <h4 className="node-title font-black">{roleData.title} Root Node</h4>
                     </div>
 
                     <div className="node-head-actions">
@@ -657,7 +737,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
 
                   {/* Node Footer */}
                   <div className="node-footer">
-                    <span className="node-id-label">NODE_00 // ROOT</span>
+                    <span className="node-id-label">NODE_00 // {roleShortName.split(" ")[0].toUpperCase()}</span>
                     <button
                       type="button"
                       className="node-open-btn"
@@ -679,11 +759,11 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                     style={{ borderColor: "#8b5cf6" }}
                   >
                     <span className="socket-dot" style={{ background: "#8b5cf6" }} />
-                    <span className="socket-tooltip">Out: SDE_LearningStream</span>
+                    <span className="socket-tooltip">Out: {roleData.id}_stream</span>
                   </div>
                 </motion.div>
 
-                {/* WIRE CONNECTING ROOT SDE NODE -> PHASE 01 (Clean data indicator, NO "PIPE" text) */}
+                {/* WIRE CONNECTING ROOT ROLE NODE -> PHASE 01 */}
                 <div className="langflow-wire-connector">
                   <svg className="wire-svg" viewBox="0 0 100 40" preserveAspectRatio="none">
                     <defs>
@@ -892,7 +972,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                       </div>
                     </motion.div>
 
-                    {/* WIRE CONNECTOR TO NEXT NODE (Clean arrow, NO "PIPE" text) */}
+                    {/* WIRE CONNECTOR TO NEXT NODE */}
                     <div className="langflow-wire-connector">
                       <svg className="wire-svg" viewBox="0 0 100 40" preserveAspectRatio="none">
                         <defs>
@@ -984,10 +1064,10 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                             border: "1px solid rgba(16, 185, 129, 0.3)",
                           }}
                         >
-                          OUTCOME // OFFER READY
+                          OUTCOME // {roleShortName.toUpperCase()} CLEARANCE
                         </span>
                       </div>
-                      <h4 className="node-title font-black">Production Clearance</h4>
+                      <h4 className="node-title font-black">{roleShortName} Production Clearance</h4>
                     </div>
 
                     <div className="node-head-actions">
@@ -1022,7 +1102,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                           <span className="check-box active">
                             <Check size={11} />
                           </span>
-                          <span className="check-text">System Design & Blind 75 Mastered</span>
+                          <span className="check-text">Domain Competency & Practical Benchmark</span>
                         </div>
                       </div>
                     </div>
@@ -1030,9 +1110,9 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                     <div className="node-deliverable-capsule outcome-capsule">
                       <div className="capsule-title">
                         <Award size={11} className="text-emerald-400" />
-                        <span>FAANG & Top Startup Clearance</span>
+                        <span>{roleShortName} Top Tier Clearance</span>
                       </div>
-                      <p>Full-stack architecture verified with production CI/CD tests.</p>
+                      <p>Production readiness benchmark verified with automated test suites.</p>
                     </div>
                   </div>
 
@@ -1063,7 +1143,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
               <span>DAG TOPOLOGY ({totalDAGNodes} NODES)</span>
             </div>
             <div className="minimap-nodes-row">
-              {/* Root Minimap Block */}
+              {/* Root Minimap Block (Dynamic per Role) */}
               <div
                 className={`minimap-node-box root ${activeNodeIndex === 0 ? "selected" : ""} ${executingNodeIndex === 0 ? "exec" : ""}`}
                 onClick={() => {
@@ -1072,9 +1152,9 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                     canvasRef.current.scrollTo({ left: 0, behavior: "smooth" });
                   }
                 }}
-                title="Root SDE Node"
+                title={`Root ${roleShortName} Node`}
               >
-                <span>SDE</span>
+                <span>{roleShortName.split(" ")[0].slice(0, 4).toUpperCase()}</span>
               </div>
 
               {/* Phase Blocks */}
@@ -1114,7 +1194,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                     });
                   }
                 }}
-                title="Offer Ready Clearance Node"
+                title={`${roleShortName} Offer Ready Node`}
               >
                 <Trophy size={9} />
               </div>
@@ -1169,7 +1249,7 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
         </div>
       </div>
 
-      {/* 4. SLIDE-OUT PLAYGROUND & INSPECTOR DRAWER (AUTHENTIC LANGFLOW PLAYGROUND) */}
+      {/* 4. SLIDE-OUT PLAYGROUND & INSPECTOR DRAWER */}
       <AnimatePresence>
         {showPlayground && (
           <>
@@ -1205,14 +1285,14 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                   <div>
                     <h3 className="drawer-title">
                       {isRootNode
-                        ? "Root Career Specification"
+                        ? `Root ${roleData.title} Specification`
                         : isOutcomeNode
-                        ? "Placement Clearance Inspector"
+                        ? `${roleShortName} Clearance Inspector`
                         : "Node Inspector & Playground"}
                     </h3>
                     <span className="drawer-sub">
                       {isRootNode
-                        ? `NODE_00 // ${roleData.title}`
+                        ? `NODE_00 // ${roleData.title} Spec`
                         : isOutcomeNode
                         ? `NODE_FINAL // Offer Clearance`
                         : `NODE_0${activePhaseIdx + 1} // ${activeStep.step}`}
@@ -1276,6 +1356,13 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                           <p className="pane-text">{roleData.overview}</p>
                         </div>
                         <div className="pane-card">
+                          <span className="pane-badge" style={{ background: "rgba(139, 92, 246, 0.2)", color: "#c4b5fd" }}>
+                            Architecture Focus Pillar
+                          </span>
+                          <h5 className="font-bold text-sm mb-1 text-white">{currentRoleAdvice.focusPill}</h5>
+                          <p className="pane-text">{currentRoleAdvice.advice}</p>
+                        </div>
+                        <div className="pane-card">
                           <h5 className="font-bold text-sm mb-2 text-white">Target Hiring Companies:</h5>
                           <div className="flex flex-wrap gap-2">
                             {roleData.popularCompanies?.map((comp, idx) => (
@@ -1292,10 +1379,14 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
                           <span className="pane-badge" style={{ background: "rgba(16, 185, 129, 0.2)", color: "#34d399" }}>
                             Final Destination
                           </span>
-                          <h4 className="pane-heading">Offer Clearance & Verification</h4>
+                          <h4 className="pane-heading">{roleShortName} Offer Clearance</h4>
                           <p className="pane-text">
                             Upon completing all milestone phases, submit your portfolio code and complete the AI Mock Interview benchmark to unlock top referral channels.
                           </p>
+                        </div>
+                        <div className="pane-card">
+                          <h5 className="font-bold text-sm mb-1 text-white">Clearance Benchmark Target</h5>
+                          <p className="pane-text font-semibold text-emerald-400">{currentRoleAdvice.keyMetric}</p>
                         </div>
                       </>
                     ) : (
@@ -1466,5 +1557,4 @@ ${(activeStep.focus || []).map((f) => `            "${f}",`).join("\n")}
     </div>
   );
 }
-
 

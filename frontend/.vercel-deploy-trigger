@@ -1,0 +1,3 @@
+Trigger Vercel redeploy: updated at 2026-10-13T04:47:30Z
+
+This file is a no-op used to trigger Vercel to pick up the latest commit which includes fixes for frontend/src/lib/utils.

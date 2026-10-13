@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import confetti from "canvas-confetti";
 import Card from "./course-design-cards";
+import { motion, AnimatePresence } from "motion/react";
+
+const smoothEase = [0.25, 0.1, 0.25, 1];
 import {
   Briefcase,
   Search,
@@ -278,40 +281,65 @@ export const FindJobModule = ({ userProfile }) => {
   const privateCount = useMemo(() => jobs.filter((j) => j.sector === "private").length, [jobs]);
 
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
+    <div className="space-y-6 pb-12">
       {/* Toast Notification */}
-      {applySuccessMessage && (
-        <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-slate-900/95 text-emerald-200 border border-emerald-500/50 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-xl animate-bounce max-w-md">
-          <CheckCircle2 size={22} className="text-emerald-400 shrink-0" />
-          <div className="text-xs">
-            <strong className="text-sm font-semibold block text-white">Application Recorded!</strong>
-            <span className="text-slate-300">
-              Saved to your profile. Official Portal:{" "}
-              <a
-                href={applySuccessMessage.applyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-cyan-300 underline font-semibold inline-flex items-center gap-0.5"
-              >
-                Open Official Portal <ArrowUpRight size={11} />
-              </a>
-            </span>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {applySuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: smoothEase }}
+            className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-slate-900/95 text-emerald-200 border border-emerald-500/50 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-xl max-w-md"
+          >
+            <CheckCircle2 size={22} className="text-emerald-400 shrink-0" />
+            <div className="text-xs">
+              <strong className="text-sm font-semibold block text-white">Application Recorded!</strong>
+              <span className="text-slate-300">
+                Saved to your profile. Official Portal:{" "}
+                <a
+                  href={applySuccessMessage.applyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-300 underline font-semibold inline-flex items-center gap-0.5"
+                >
+                  Open Official Portal <ArrowUpRight size={11} />
+                </a>
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Top Centered Header: Available Jobs */}
       <div className="text-center py-6 px-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/10 border border-slate-900/15 text-slate-800 text-xs font-bold mb-3 backdrop-blur-md shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: smoothEase }}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/10 border border-slate-900/15 text-slate-800 text-xs font-bold mb-3 backdrop-blur-md shadow-sm"
+        >
           <Sparkles size={14} className="text-indigo-600" />
           <span>REAL-TIME JOB SEARCH • {jobs.length} ACTIVE VACANCIES</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" style={{ color: "#0f172a" }}>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: smoothEase }}
+          className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight"
+          style={{ color: "#0f172a" }}
+        >
           Available Jobs
-        </h1>
+        </motion.h1>
 
         {/* Sync / Stat row */}
-        <div className="flex items-center justify-center flex-wrap gap-3.5 mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.28, ease: smoothEase }}
+          className="flex items-center justify-center flex-wrap gap-3.5 mt-4"
+        >
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-xs text-amber-300 shadow-md border border-slate-800">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span>🏛️ Govt / PSU: <strong>{govtCount}</strong></span>
@@ -329,15 +357,26 @@ export const FindJobModule = ({ userProfile }) => {
             <RefreshCw size={13} className={isLoading ? "animate-spin" : ""} />
             <span>{isLoading ? "Syncing..." : "Sync Live Feed"}</span>
           </button>
-        </div>
-        <p className="mt-3 text-xs text-slate-600">
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.38, ease: smoothEase }}
+          className="mt-3 text-xs text-slate-600"
+        >
           Sources last checked: {feedCheckedAt ? new Date(feedCheckedAt).toLocaleString() : "not checked yet"} ·
           {" "}Automatic refresh every 5 minutes. Confirm vacancy status on the official portal.
-        </p>
+        </motion.p>
       </div>
 
       {/* Main Sector Selector Tabs (All, Govt, Private) */}
-      <div className="flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.85, delay: 0.44, ease: smoothEase }}
+        className="flex items-center justify-center"
+      >
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-white/15 w-full max-w-xl">
         <button
           type="button"
@@ -387,10 +426,15 @@ export const FindJobModule = ({ userProfile }) => {
           <span>🏢 Private ({privateCount})</span>
         </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-slate-900/85 backdrop-blur-xl border border-white/15 rounded-3xl p-5 shadow-xl space-y-4">
+      <motion.div
+        initial={{ opacity: 0, y: 22 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.52, ease: smoothEase }}
+        className="bg-slate-900/85 backdrop-blur-xl border border-white/15 rounded-3xl p-5 shadow-xl space-y-4"
+      >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           {/* Keyword Search */}
           <div className="md:col-span-5 relative flex items-center">
@@ -484,11 +528,16 @@ export const FindJobModule = ({ userProfile }) => {
             Showing <strong className="text-white">{filteredJobs.length}</strong> matching verified openings
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Jobs Grid using Course Design Cards */}
+      {/* Jobs Grid using Course Design Cards with Smooth Staggered Entrance */}
       {filteredJobs.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/60 border border-white/10 rounded-3xl">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="text-center py-16 bg-slate-900/60 border border-white/10 rounded-3xl"
+        >
           <AlertCircle size={40} className="mx-auto text-amber-400 mb-3" />
           <h3 className="text-lg font-bold text-white">No Matching Openings Found</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
@@ -506,7 +555,7 @@ export const FindJobModule = ({ userProfile }) => {
           >
             Reset Filters
           </button>
-        </div>
+        </motion.div>
       ) : (
         <div className="job-cards-grid">
           {filteredJobs.map((job, idx) => {
@@ -538,20 +587,44 @@ export const FindJobModule = ({ userProfile }) => {
             };
 
             return (
-              <Card
+              <motion.div
                 key={job.id}
-                data={cardData}
-                onApply={(e) => handleApply(job, e)}
-              />
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.55,
+                  delay: 0.58 + Math.min(idx, 8) * 0.08,
+                  ease: smoothEase,
+                }}
+                className="h-full flex flex-col"
+              >
+                <Card
+                  data={cardData}
+                  onApply={(e) => handleApply(job, e)}
+                />
+              </motion.div>
             );
           })}
         </div>
       )}
 
       {/* Detailed Job Modal */}
-      {activeJobModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      <AnimatePresence>
+        {activeJobModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ duration: 0.35, ease: smoothEase }}
+              className="relative w-full max-w-2xl bg-slate-900 border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto"
+            >
             <button
               onClick={() => setActiveJobModal(null)}
               className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
@@ -717,9 +790,10 @@ export const FindJobModule = ({ userProfile }) => {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

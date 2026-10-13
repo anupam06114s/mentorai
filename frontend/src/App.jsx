@@ -314,11 +314,96 @@ const DEFAULT_EXAMS = [
   }
 ];
 
+const VALID_PAGES = [
+  "dashboard",
+  "resume",
+  "career",
+  "interview",
+  "tests",
+  "chat",
+  "jobs",
+  "contact",
+  "profile"
+];
+
+function getInitialPage() {
+  if (typeof window === "undefined") return "dashboard";
+
+  // 1. Check URL hash (e.g. #tests, #/tests)
+  const hash = window.location.hash.replace(/^#\/?/, "").toLowerCase().trim();
+  if (VALID_PAGES.includes(hash)) {
+    return hash;
+  }
+
+  // 2. Check query param (?page=tests or ?tab=tests)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const paramPage = (params.get("page") || params.get("tab") || "").toLowerCase().trim();
+    if (VALID_PAGES.includes(paramPage)) {
+      return paramPage;
+    }
+  } catch {}
+
+  // 3. Check pathname (/tests)
+  const pathname = window.location.pathname.replace(/^\//, "").split("/")[0].toLowerCase().trim();
+  if (VALID_PAGES.includes(pathname)) {
+    return pathname;
+  }
+
+  // 4. Check localStorage
+  try {
+    const saved = localStorage.getItem("mentor_active_page");
+    if (saved && VALID_PAGES.includes(saved)) {
+      return saved;
+    }
+  } catch {}
+
+  return "dashboard";
+}
+
 export default function App() {
   const { user: clerkUser, isSignedIn: isClerkSignedIn, isLoaded: isClerkLoaded } = useUser();
   const { signOut: clerkSignOut } = useClerk();
 
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState(getInitialPage);
+
+  // Sync page state with localStorage and URL hash for page refresh persistence
+  useEffect(() => {
+    if (VALID_PAGES.includes(page)) {
+      try {
+        localStorage.setItem("mentor_active_page", page);
+      } catch {}
+
+      const currentHash = window.location.hash.replace(/^#\/?/, "").toLowerCase().trim();
+      if (page === "dashboard") {
+        if (currentHash && VALID_PAGES.includes(currentHash)) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
+      } else if (currentHash !== page) {
+        window.history.replaceState(null, "", `#${page}`);
+      }
+    }
+  }, [page]);
+
+  // Support browser back / forward navigation and hash changes
+  useEffect(() => {
+    const handleHashOrPopState = () => {
+      const currentHash = window.location.hash.replace(/^#\/?/, "").toLowerCase().trim();
+      if (VALID_PAGES.includes(currentHash)) {
+        setPage(currentHash);
+      } else if (!currentHash) {
+        setPage("dashboard");
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashOrPopState);
+    window.addEventListener("popstate", handleHashOrPopState);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashOrPopState);
+      window.removeEventListener("popstate", handleHashOrPopState);
+    };
+  }, []);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem("access_token");
@@ -733,6 +818,12 @@ export default function App() {
     fetch(`${API_BASE_URL}/auth/logout`, { method: "POST" }).catch(() => {});
     localStorage.removeItem("access_token");
     localStorage.removeItem("guest_mode");
+    localStorage.removeItem("mentor_active_page");
+    try {
+      if (window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    } catch {}
     try {
       if (clerkSignOut) clerkSignOut();
     } catch {}

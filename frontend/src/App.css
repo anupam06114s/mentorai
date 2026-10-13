@@ -2613,15 +2613,23 @@ body,
 /* Tablets & Mobile (< 900px) */
 @media (max-width: 900px) {
   .sidebar {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
+    -webkit-transform: translate3d(-100%, 0, 0);
     visibility: hidden;
     pointer-events: none;
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
-    width: min(280px, 85vw);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.12);
+    width: min(285px, 85vw);
+    z-index: 40;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .sidebar.sidebar-open {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
     visibility: visible;
     pointer-events: auto;
   }
@@ -2629,12 +2637,14 @@ body,
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 25;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 35;
     border: none;
     cursor: pointer;
+    touch-action: none;
+    will-change: opacity;
   }
   .mobile-close {
     display: grid;
@@ -2644,22 +2654,68 @@ body,
     border-radius: var(--radius-sm);
     color: var(--text-secondary);
     margin-left: auto;
+    transition: transform 0.18s ease, color 0.18s ease;
+  }
+  .mobile-close:active {
+    transform: scale(0.9);
   }
   .menu-toggle {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-md);
-    background: #f8fafc;
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    cursor: pointer;
+    margin-right: 10px;
     flex-shrink: 0;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-toggle:active {
+    transform: scale(0.92);
   }
   .menu-toggle:hover {
-    background: var(--primary-light);
-    color: var(--primary);
+    background: #f8fafc;
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+  .hamburger-box {
+    width: 20px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    pointer-events: none;
+  }
+  .hamburger-line {
+    display: block;
+    width: 100%;
+    height: 2.2px;
+    background: #334155;
+    border-radius: 9999px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, background-color 0.2s ease;
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+  .menu-toggle:hover .hamburger-line {
+    background: #6366f1;
+  }
+  .menu-toggle.menu-open .hamburger-line.line-1 {
+    transform: translateY(6px) rotate(45deg);
+    background: #6366f1;
+  }
+  .menu-toggle.menu-open .hamburger-line.line-2 {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .menu-toggle.menu-open .hamburger-line.line-3 {
+    transform: translateY(-6px) rotate(-45deg);
+    background: #6366f1;
   }
   .main-area {
     margin-left: 0;
@@ -4501,3 +4557,1121 @@ body,
   }
 }
 
+/* ==========================================================================
+   🧭 CAREER ROLE CATALOG & LANGFLOW PIPELINE ARCHITECTURE (UI/UX PRO MAX)
+   ========================================================================== */
+
+/* 1. Career Role Catalog Controls */
+.career-catalog-container {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.career-catalog-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.career-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  padding: 0 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s ease;
+}
+
+.career-search-box:focus-within {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15), 0 8px 24px rgba(139, 92, 246, 0.08);
+}
+
+.search-icon-muted {
+  color: #94a3b8;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.career-search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 14.5px;
+  color: #1e293b;
+  outline: none;
+  font-family: inherit;
+}
+
+.career-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.clear-search-btn {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #64748b;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.career-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.career-pill {
+  padding: 7px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.career-pill:hover {
+  background: #ffffff;
+  color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.career-pill.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.career-results-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #64748b;
+  padding: 0 4px;
+}
+
+.career-results-meta strong {
+  color: #1e293b;
+}
+
+.career-results-meta .meta-sub {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* 2. Career Role Cards Grid */
+.career-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 22px;
+  margin-bottom: 36px;
+}
+
+.career-card-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  border-radius: 22px;
+  padding: 24px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.career-card-item:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.2);
+}
+
+.career-card-item.active-role-card {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25), 0 16px 36px -10px rgba(99, 102, 241, 0.25);
+}
+
+.career-card-glow {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  opacity: 0.12;
+  filter: blur(28px);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.career-card-item:hover .career-card-glow {
+  opacity: 0.22;
+}
+
+.career-card-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.career-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.career-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
+}
+
+.career-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.career-category-chip {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.3px;
+}
+
+.career-badge-pill {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.1);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+}
+
+.career-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0 0 14px 0;
+  line-height: 1.3;
+}
+
+.career-salary-timeline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(241, 245, 249, 0.9);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.career-stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.career-stat-box .stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.career-stat-box .stat-val {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.career-stat-box .stat-sub {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.career-card-overview {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.career-skills-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.career-skill-chip {
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 3px 9px;
+  border-radius: 8px;
+}
+
+.career-skill-more {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.08);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.career-companies-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 16px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(226, 232, 240, 0.8);
+}
+
+.career-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(241, 245, 249, 0.9);
+}
+
+.career-card-cta .cta-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.career-card-cta .cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.career-card-item:hover .cta-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* 3. LangFlow Interactive Guide Wrapper & Control Bar */
+.langflow-guide-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.langflow-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  border-radius: 20px;
+  padding: 16px 20px;
+  box-shadow: 0 10px 28px -8px rgba(15, 23, 42, 0.05);
+}
+
+.langflow-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.langflow-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #475569;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.langflow-back-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  transform: translateX(-2px);
+}
+
+.langflow-role-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.langflow-role-icon-square {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
+  flex-shrink: 0;
+}
+
+.langflow-role-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+
+.langflow-demand-pill {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.1);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.langflow-role-category {
+  font-size: 12px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+  font-weight: 500;
+}
+
+.langflow-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.langflow-salary-tag {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.langflow-salary-tag .sal-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.langflow-salary-tag strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.langflow-salary-tag small {
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.langflow-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.langflow-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.langflow-save-btn:hover {
+  background: #ffffff;
+  border-color: #8b5cf6;
+  color: #7c3aed;
+}
+
+.langflow-interview-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.langflow-interview-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+}
+
+/* Quick Role Switcher Strip */
+.langflow-role-tabs-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.langflow-strip-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.langflow-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.langflow-role-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.langflow-role-tab:hover {
+  background: #ffffff;
+  color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.langflow-role-tab.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* 4. LangFlow Canvas & Pipeline */
+.langflow-canvas {
+  position: relative;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 1.5px, transparent 1.5px) 0 0 / 24px 24px, #ffffff;
+  border: 1.5px solid rgba(226, 232, 240, 0.95);
+  border-radius: 28px;
+  padding: 32px 28px;
+  box-shadow: 0 16px 40px -12px rgba(99, 102, 241, 0.09);
+  overflow: hidden;
+}
+
+.langflow-canvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.langflow-pipeline-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+}
+
+.langflow-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.langflow-canvas-metrics {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.langflow-metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+
+.langflow-canvas-hint {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 28px 0;
+  max-width: 720px;
+}
+
+/* 5. Pipeline Nodes */
+.langflow-pipeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.langflow-node {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(226, 232, 240, 0.95);
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.langflow-node:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 14px 34px -8px rgba(99, 102, 241, 0.16);
+}
+
+.langflow-node.inspected {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18), 0 16px 36px -8px rgba(99, 102, 241, 0.22);
+}
+
+.langflow-node.completed {
+  border-color: #10b981;
+}
+
+/* Node Pins (Ports) */
+.node-port {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #6366f1;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+  z-index: 5;
+}
+
+.node-port.input-port {
+  top: -6.5px;
+  left: 36px;
+}
+
+.node-port.output-port {
+  bottom: -6.5px;
+  left: 36px;
+}
+
+.langflow-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.node-phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.node-phase-badge .phase-num {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #ffffff;
+  background: #0f172a;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.node-phase-badge .phase-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.node-duration-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+.langflow-node-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  margin: 0 0 14px 0;
+}
+
+.langflow-node-topics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.langflow-topic-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #334155;
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(241, 245, 249, 0.9);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.langflow-topic-item:hover {
+  background: #f1f5f9;
+}
+
+.langflow-topic-item.checked {
+  background: rgba(240, 253, 244, 0.9);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #15803d;
+}
+
+.topic-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: #ffffff;
+  color: #ffffff;
+  transition: all 0.18s ease;
+}
+
+.topic-checkbox.active {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.langflow-node-deliverable {
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.4), rgba(253, 230, 138, 0.2));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.deliverable-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #b45309;
+  margin-bottom: 4px;
+}
+
+.langflow-node-deliverable p {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #78350f;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.langflow-node-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(241, 245, 249, 0.9);
+}
+
+.node-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.node-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.node-status-dot.ready {
+  background: #8b5cf6;
+  box-shadow: 0 0 6px rgba(139, 92, 246, 0.5);
+}
+
+.node-status-dot.done {
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.node-inspect-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+  border: none;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.node-inspect-btn:hover {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+/* 6. Connector Beams between Nodes */
+.langflow-connector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding-left: 35px;
+  position: relative;
+}
+
+.langflow-connector-beam {
+  position: relative;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
+  border-radius: 3px;
+}
+
+.langflow-connector-pulse {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #06b6d4;
+  box-shadow: 0 0 10px #06b6d4, 0 0 16px #8b5cf6;
+  animation: flowPulseAnim 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes flowPulseAnim {
+  0% { top: 0%; opacity: 0; }
+  25% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.langflow-connector-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px dashed rgba(139, 92, 246, 0.25);
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* 7. Intel & Capstone Grid */
+.langflow-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.langflow-intel-card, .langflow-projects-card {
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.intel-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.intel-card-head h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.intel-card-head p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.intel-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.intel-block {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid;
+}
+
+.intel-block.private {
+  background: rgba(238, 242, 255, 0.5);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.intel-block.govt {
+  background: rgba(240, 253, 244, 0.5);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.intel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.intel-block.private .intel-badge {
+  color: #4f46e5;
+}
+
+.intel-block.govt .intel-badge {
+  color: #15803d;
+}
+
+.intel-block p {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #334155;
+  margin: 0;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.project-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(241, 245, 249, 0.9);
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.project-number {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0891b2;
+  background: rgba(6, 182, 212, 0.1);
+  padding: 3px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-info strong {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.project-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.p-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  background: #ffffff;
+  padding: 1px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* 8. Node Detail Modal */
+.node-detail-modal {
+  max-width: 580px;
+  width: 92%;
+  padding: 24px;
+  border-radius: 24px;
+}
+
+.modal-topic-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #334155;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-topic-check.active {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.modal-deliverable-box {
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+/* Responsive Rules */
+@media (max-width: 900px) {
+  .langflow-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .langflow-control-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .langflow-bar-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .langflow-bar-right {
+    justify-content: space-between;
+  }
+  .career-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

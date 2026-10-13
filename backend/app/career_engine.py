@@ -218,6 +218,254 @@ CAREER_ROLE_SPECS: Dict[str, Any] = {
             "private_companies": "High focus on model evaluation metrics (F1, ROC-AUC, BLEU), memory-efficient inference (quantization), and deployment.",
             "govt_exams": "AI positions in defense/scientific organizations (DRDO, ISRO, MeitY) emphasize mathematical foundations, signal processing, and robotics."
         }
+    },
+    "bi_specialist": {
+        "id": "bi_specialist",
+        "title": "Business Intelligence (BI) Specialist",
+        "category": "Analytics & Insights",
+        "badge": "High Demand",
+        "avg_salary": {"us": "$105,000 / yr", "in": "₹8 - 22 LPA"},
+        "time_to_ready": "4 - 7 Months",
+        "overview": "Design scalable enterprise data models, ETL pipelines, and executive dashboards using Power BI, Tableau, Snowflake, and advanced SQL.",
+        "required_skills": [
+            "Power BI & DAX Calculations", "Tableau Desktop & Server", "Advanced SQL & Data Modeling (Star Schema)",
+            "Data Warehousing (Snowflake / BigQuery)", "ETL / ELT Pipelines (dbt, Apache Airflow)",
+            "Data Storytelling & Executive Presentations", "Excel VBA & Power Query"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: Enterprise SQL & Dimensional Modeling",
+                "duration": "Weeks 1 - 5",
+                "focus": ["Star & Snowflake schemas, Fact vs Dimension tables", "Complex joins, windowing, subqueries", "Indexing & query optimization"],
+                "deliverable": "Design a complete Retail Enterprise Data Mart with normalized dimensional models."
+            },
+            {
+                "step": "Step 2: Advanced Power BI & DAX Engineering",
+                "duration": "Weeks 6 - 12",
+                "focus": ["DAX time intelligence (YTD, MTD, YoY growth)", "Row-Level Security (RLS)", "Performance Analyzer & optimization"],
+                "deliverable": "Multi-tier Financial & Operational BI Dashboard with RLS and automated refresh."
+            },
+            {
+                "step": "Step 3: Cloud Data Warehousing & Modern ELT",
+                "duration": "Weeks 13 - 18",
+                "focus": ["Snowflake / BigQuery querying & partitioning", "dbt transformations & data testing", "Airflow orchestration"],
+                "deliverable": "End-to-end ELT pipeline from PostgreSQL to Snowflake with dbt documentation."
+            }
+        ],
+        "recommended_projects": [
+            "Global Supply Chain Intelligence Dashboard with real-time stock alert telemetry",
+            "Customer Lifetime Value (LTV) & Cohort Churn Dashboard with DAX forecasting"
+        ],
+        "placement_guidance": {
+            "private_companies": "Focus on dimensional modeling questions (Kimball methodology), optimizing slow DAX formulas, and data storytelling.",
+            "govt_exams": "Public sector undertakings (ONGC, IOCL, RBI) frequently recruit BI and MIS officers for data governance and financial audit reporting."
+        }
+    },
+    "fullstack_developer": {
+        "id": "fullstack_developer",
+        "title": "Full Stack Engineer",
+        "category": "Core Engineering",
+        "badge": "Versatile Pro",
+        "avg_salary": {"us": "$130,000 / yr", "in": "₹12 - 30 LPA"},
+        "time_to_ready": "6 - 9 Months",
+        "overview": "Bridge client-side experiences with robust server architecture, relational/NoSQL datastores, and cloud deployments.",
+        "required_skills": [
+            "React 19 & Next.js", "Node.js / Express or Python FastAPI", "PostgreSQL & Prisma/TypeORM",
+            "REST & GraphQL APIs", "Tailwind CSS", "Docker & AWS", "Git & CI/CD Pipelines"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: Modern Frontend Architecture",
+                "duration": "Weeks 1 - 6",
+                "focus": ["React 19, TypeScript, state management with Zustand", "Responsive Tailwind CSS, accessible components", "API data fetching with TanStack Query"],
+                "deliverable": "Interactive SaaS dashboard with dynamic charting and authentication views."
+            },
+            {
+                "step": "Step 2: Scalable Backend & Database Modeling",
+                "duration": "Weeks 7 - 14",
+                "focus": ["FastAPI / Node.js REST services", "PostgreSQL schema migrations, transactions, indexing", "JWT authentication & OAuth2"],
+                "deliverable": "Multi-tenant REST API with role-based access control and rate-limiting."
+            },
+            {
+                "step": "Step 3: Full-Stack Integration & Cloud Deployment",
+                "duration": "Weeks 15 - 24",
+                "focus": ["End-to-end integration, SSR with Next.js", "Docker containerization & docker-compose", "Deployment to AWS/Render with CI/CD"],
+                "deliverable": "Production-ready Full Stack collaborative project management platform."
+            }
+        ],
+        "recommended_projects": [
+            "Full Stack Real-Time Team Messaging App with WebSockets, PostgreSQL and Redis",
+            "AI-Powered Workflow Automation Platform with Stripe Billing & Webhooks"
+        ],
+        "placement_guidance": {
+            "private_companies": "Product companies love candidates who can demonstrate full-cycle ownership from UI design to production deployment.",
+            "govt_exams": "Govt IT departments look for full stack skills for e-governance portals with security compliance."
+        }
+    },
+    "devops_engineer": {
+        "id": "devops_engineer",
+        "title": "DevOps & Cloud Engineer",
+        "category": "Cloud & Infrastructure",
+        "badge": "High Demand",
+        "avg_salary": {"us": "$138,000 / yr", "in": "₹14 - 32 LPA"},
+        "time_to_ready": "6 - 9 Months",
+        "overview": "Build resilient CI/CD release pipelines, manage Kubernetes clusters, automate cloud infrastructure with Terraform, and ensure 99.99% uptime.",
+        "required_skills": [
+            "Linux Server Administration & Bash", "Docker & Kubernetes (K8s)", "AWS / GCP Cloud Services",
+            "Terraform (Infrastructure as Code)", "CI/CD (GitHub Actions / GitLab)", "Monitoring & Observability (Prometheus, Grafana)"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: Linux & Containerization Foundations",
+                "duration": "Weeks 1 - 6",
+                "focus": ["Linux kernel, networking (DNS, IPTables, SSH)", "Docker multi-stage builds & container security", "Bash shell scripting automation"],
+                "deliverable": "Automated server hardening script and multi-stage Dockerized application stack."
+            },
+            {
+                "step": "Step 2: Kubernetes & Infrastructure as Code (IaC)",
+                "duration": "Weeks 7 - 14",
+                "focus": ["Kubernetes Pods, Deployments, Services, Ingress", "Helm charts packaging", "Terraform AWS provisioning (VPC, EKS, RDS)"],
+                "deliverable": "Provision a production-grade AWS EKS Kubernetes cluster via Terraform IaC."
+            },
+            {
+                "step": "Step 3: Production CI/CD & Observability",
+                "duration": "Weeks 15 - 22",
+                "focus": ["GitHub Actions automated test & deploy pipelines", "Prometheus metrics collection & Grafana dashboards", "Zero-downtime Blue/Green deployments"],
+                "deliverable": "Automated GitOps pipeline deploying microservices to Kubernetes with alerts."
+            }
+        ],
+        "recommended_projects": [
+            "Zero-Downtime Multi-Region Kubernetes GitOps Deployment Pipeline with ArgoCD",
+            "Automated Cloud Cost Optimizer & Drift Detection Engine with Terraform"
+        ],
+        "placement_guidance": {
+            "private_companies": "Heavy focus on Kubernetes troubleshooting, container security scanning, and Terraform state management.",
+            "govt_exams": "National Informatics Centre (NIC) and ISRO cloud centers look for strong Linux sysadmin and private cloud virtualization."
+        }
+    },
+    "cybersecurity_specialist": {
+        "id": "cybersecurity_specialist",
+        "title": "Cybersecurity & Security Analyst",
+        "category": "Security & Networks",
+        "badge": "Mission Critical",
+        "avg_salary": {"us": "$135,000 / yr", "in": "₹10 - 28 LPA"},
+        "time_to_ready": "6 - 9 Months",
+        "overview": "Defend infrastructure and applications against cyber threats, conduct penetration testing, audit compliance, and investigate incidents.",
+        "required_skills": [
+            "Network Protocols & Architecture (TCP/IP, Wireshark)", "OWASP Top 10 Web Vulnerabilities",
+            "Penetration Testing (Kali Linux, Burp Suite)", "SIEM & Log Analysis (Splunk, ELK)",
+            "Linux Security & Cryptography", "Incident Response & Forensics"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: Network & OS Security Foundations",
+                "duration": "Weeks 1 - 6",
+                "focus": ["Packet analysis with Wireshark", "Firewalls, IDS/IPS, VPNs", "Linux privilege escalation & hardening"],
+                "deliverable": "Comprehensive network security audit report of a simulated enterprise subnet."
+            },
+            {
+                "step": "Step 2: Web Application Security & Penetration Testing",
+                "duration": "Weeks 7 - 14",
+                "focus": ["SQL injection, XSS, CSRF, SSRF, IDOR", "Burp Suite professional workflows", "PortSwigger Web Security Academy labs"],
+                "deliverable": "Full vulnerability assessment and penetration testing (VAPT) report on target web app."
+            },
+            {
+                "step": "Step 3: SOC Operations & Incident Response",
+                "duration": "Weeks 15 - 22",
+                "focus": ["SIEM log monitoring with Splunk", "Malware triage and memory forensics", "MITRE ATT&CK framework mapping"],
+                "deliverable": "Incident response playbook and threat-hunting simulation in virtual lab."
+            }
+        ],
+        "recommended_projects": [
+            "Automated Web Vulnerability Scanner with OWASP ZAP API Integration",
+            "Threat Intelligence SIEM Dashboard with live honeypot intrusion detection"
+        ],
+        "placement_guidance": {
+            "private_companies": "Earn certifications like CEH, CompTIA Security+, or OSCP; demonstrate hands-on TryHackMe / HackTheBox rankings.",
+            "govt_exams": "Defense agencies (CERT-In, DRDO, IB, NTRO) actively recruit cybersecurity analysts with deep protocol forensics."
+        }
+    },
+    "mobile_developer": {
+        "id": "mobile_developer",
+        "title": "Mobile App Developer (iOS / Android)",
+        "category": "Mobile Engineering",
+        "badge": "High Demand",
+        "avg_salary": {"us": "$120,000 / yr", "in": "₹9 - 24 LPA"},
+        "time_to_ready": "5 - 8 Months",
+        "overview": "Build fluid, offline-first native and cross-platform mobile apps for iOS and Android using Flutter, React Native, or Kotlin.",
+        "required_skills": [
+            "Flutter & Dart or React Native", "Kotlin / Swift Foundations", "Mobile State Management (Bloc / Riverpod / Redux)",
+            "REST APIs & WebSockets Integration", "Local Storage (SQLite / Hive)", "App Store & Play Store Deployment"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: Mobile UI & Cross-Platform Basics",
+                "duration": "Weeks 1 - 5",
+                "focus": ["Widget tree & layout responsiveness", "Touch gestures & custom animations", "State management with Provider/Riverpod"],
+                "deliverable": "Clean E-commerce mobile app UI with smooth transitions and persistent cart."
+            },
+            {
+                "step": "Step 2: Networking, Local DB & Offline-First Sync",
+                "duration": "Weeks 6 - 12",
+                "focus": ["HTTP client, interceptors, error handling", "Offline caching with SQLite / Hive", "Push notifications (Firebase FCM)"],
+                "deliverable": "Offline-first Notes & Task Manager with cloud sync and biometric auth."
+            },
+            {
+                "step": "Step 3: Native Modules & Production Release",
+                "duration": "Weeks 13 - 18",
+                "focus": ["Device hardware APIs (Camera, GPS, Bluetooth)", "App performance profiling & memory leak checks", "CI/CD build pipelines (Fastlane) & Store submission"],
+                "deliverable": "Publish a live production app on Google Play Store or Apple TestFlight."
+            }
+        ],
+        "recommended_projects": [
+            "Real-Time Ride Hailing / Delivery Mobile App with Mapbox & WebSockets",
+            "Personal Finance & Expense Tracker with On-Device OCR Receipt Scanning"
+        ],
+        "placement_guidance": {
+            "private_companies": "Have at least 1 published app on the Play Store or GitHub with clean architecture (Clean Architecture / MVVM).",
+            "govt_exams": "Govt bodies like NIC build major citizen apps (Aadhaar, DigiLocker, Aarogya Setu) requiring secure mobile developers."
+        }
+    },
+    "ui_ux_designer": {
+        "id": "ui_ux_designer",
+        "title": "UI/UX & Product Designer",
+        "category": "Product & Design",
+        "badge": "Creative & Strategic",
+        "avg_salary": {"us": "$110,000 / yr", "in": "₹8 - 20 LPA"},
+        "time_to_ready": "4 - 6 Months",
+        "overview": "Design engaging user journeys, design systems, interactive prototypes, and accessible user interfaces from concept to developer handoff.",
+        "required_skills": [
+            "Figma & Auto Layout", "Design Systems & Token Architecture", "Wireframing & Interactive Prototyping",
+            "User Research & Usability Testing", "Information Architecture (IA)", "Micro-interactions & Motion Design"
+        ],
+        "roadmap_steps": [
+            {
+                "step": "Step 1: UX Research & Information Architecture",
+                "duration": "Weeks 1 - 4",
+                "focus": ["User personas, journey mapping, empathy maps", "Card sorting & Information Architecture", "Lo-fi wireframing in Figma"],
+                "deliverable": "End-to-end UX case study identifying user friction in an existing mobile application."
+            },
+            {
+                "step": "Step 2: Visual UI Design & Design Systems",
+                "duration": "Weeks 5 - 10",
+                "focus": ["Typography, grid systems, color theory, contrast ratios (WCAG)", "Figma Auto Layout, components, variants & variables", "Building a reusable Design System"],
+                "deliverable": "Comprehensive Multi-platform Design System with 50+ reusable components."
+            },
+            {
+                "step": "Step 3: Hi-Fi Prototyping & Developer Handoff",
+                "duration": "Weeks 11 - 16",
+                "focus": ["Advanced Figma smart animate & interactive components", "Usability testing & feedback iteration", "Design specs & developer handoff documentation"],
+                "deliverable": "Interactive clickable prototype of a complex SaaS web application with usability test results."
+            }
+        ],
+        "recommended_projects": [
+            "Complete SaaS Enterprise Cloud Management Dashboard Case Study",
+            "Mobile FinTech Wealth Management App Redesign with Usability Metrics"
+        ],
+        "placement_guidance": {
+            "private_companies": "A polished online portfolio (Notion/Framer/Behance) with 2-3 deep problem-solving case studies is mandatory.",
+            "govt_exams": "Govt portals (Digital India, MyGov) prioritize accessible, localized vernacular UI and WCAG 2.1 compliance."
+        }
     }
 }
 

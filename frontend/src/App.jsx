@@ -15,6 +15,9 @@ import ResumeJobRecommendations from "./components/ui/resume-job-recommendations
 import { CompanyLogo } from "./components/ui/company-logo";
 import { ProgressiveFluxLoader } from "./components/ui/progressive-flux-loader";
 import { buildEnhancedResumeData } from "./utils/resumeOptimizer";
+import { CAREER_ROLES_CATALOG } from "./data/careerRoles";
+import { CareerRoleCatalog } from "./components/ui/CareerRoleCatalog";
+import { LangflowCareerGuide } from "./components/ui/LangflowCareerGuide";
 import Auth from "./Auth";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -99,6 +102,8 @@ const RESUME_SCAN_PHASES = [
   { at: 80, label: "matching role keywords & skills" },
   { at: 100, label: "audit report complete" },
 ];
+
+
 
 const SAMPLE_RESUMES = {
   fullstack: `Alex Candidate
@@ -590,10 +595,11 @@ export default function App() {
   const resumeTopRef = useRef(null);
 
   // 2. Career Guidance State
-  const [careerTab, setCareerTab] = useState("roadmap"); // roadmap | saved
+  const [careerTab, setCareerTab] = useState("catalog"); // catalog | flow | saved
   const [selectedCareerRole, setSelectedCareerRole] = useState("software_developer");
   const [customJobDesc, setCustomJobDesc] = useState("");
   const [careerGuidanceData, setCareerGuidanceData] = useState(null);
+
   const [savedCareerPlans, setSavedCareerPlans] = useState([]);
   const [careerNotification, setCareerNotification] = useState("");
 
@@ -757,26 +763,26 @@ export default function App() {
     return () => clearInterval(interval);
   }, [testTimerRunning, testTimerSeconds]);
 
-  // Load Career Guidance when role changes
+  // Load Career Guidance when role changes with smooth ProgressiveFluxLoader animation
   useEffect(() => {
-    if (page === "career") {
-      fetch(`${API_BASE_URL}/api/career/personalized`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`
-        },
-        body: JSON.stringify({
-          target_role: selectedCareerRole,
-          job_description: customJobDesc
-        })
+    if (page !== "career") return;
+
+    fetch(`${API_BASE_URL}/api/career/personalized`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`
+      },
+      body: JSON.stringify({
+        target_role: selectedCareerRole,
+        job_description: customJobDesc
       })
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data) setCareerGuidanceData(data);
-        })
-        .catch(() => {});
-    }
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) setCareerGuidanceData(data);
+      })
+      .catch(() => {});
   }, [page, selectedCareerRole, customJobDesc]);
 
   // -------------------------------------------------------------------------
@@ -2138,19 +2144,63 @@ export default function App() {
       const guidance = careerGuidanceData;
 
       return (
-        <section className="feature-workspace">
-          <div className="workspace-header">
-            <div className="feature-icon blue"><Compass size={26} /></div>
-            <div>
-              <h2>Career Guidance</h2>
-              <p>Personalized AI roadmaps, skill gap analysis, and placement guidance for top tech and government roles.</p>
-            </div>
-            <div className="header-actions">
+        <section className="feature-workspace relative z-10 w-full">
+          {/* Centered Career Guidance Hero Section */}
+          <div className="resume-hero-centered">
+            {/* Top Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: smoothEase }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-400/25 text-purple-700 text-xs font-bold mb-3 backdrop-blur-md shadow-sm"
+            >
+              <Sparkles size={14} className="text-purple-600" />
+              <span>AI-POWERED PERSONALIZED ROADMAPS & CAREER ARCHITECTURE</span>
+            </motion.div>
+
+            {/* Middle: Logo + Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.12, ease: smoothEase }}
+              className="flex flex-col items-center justify-center gap-2 mb-2 text-center"
+            >
+              <div className="resume-hero-logo">
+                <Compass size={38} className="text-purple-600" />
+              </div>
+              <h1 className="resume-hero-title">Career Guidance</h1>
+            </motion.div>
+
+            {/* "by mentor ai aura" Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.22, ease: smoothEase }}
+              className="mock-test-by-badge mb-5"
+            >
+              <span>by</span>
+              <strong style={{ color: "#7c3aed" }}>Mentor AI Aura</strong>
+              <Sparkles size={13} style={{ color: "#7c3aed" }} />
+            </motion.div>
+
+            {/* Tab Actions: All Career Roles, LangFlow Guide, Saved Career Plans */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.32, ease: smoothEase }}
+              className="flex items-center justify-center gap-3 mb-6"
+            >
               <button
-                className={`tab-btn ${careerTab === "roadmap" ? "active" : ""}`}
-                onClick={() => setCareerTab("roadmap")}
+                className={`tab-btn ${careerTab === "catalog" ? "active" : ""}`}
+                onClick={() => setCareerTab("catalog")}
               >
-                Roadmap Explorer
+                All Career Roles (11)
+              </button>
+              <button
+                className={`tab-btn ${careerTab === "flow" ? "active" : ""}`}
+                onClick={() => setCareerTab("flow")}
+              >
+                LangFlow Interactive Guide
               </button>
               <button
                 className={`tab-btn ${careerTab === "saved" ? "active" : ""}`}
@@ -2162,9 +2212,9 @@ export default function App() {
                   if (res.ok) setSavedCareerPlans(await res.json());
                 }}
               >
-                Saved Career Plans
+                Saved Plans ({savedCareerPlans.length})
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {careerNotification && <div className="toast-banner">{careerNotification}</div>}
@@ -2173,7 +2223,7 @@ export default function App() {
             <div className="panel history-panel">
               <h3>Your Saved Career Plans</h3>
               {savedCareerPlans.length === 0 ? (
-                <p className="muted" style={{ padding: "20px 0" }}>No saved career plans yet. Click "Save this Career Plan" on any role roadmap!</p>
+                <p className="muted" style={{ padding: "20px 0" }}>No saved career plans yet. Click "Save Plan" on any role roadmap!</p>
               ) : (
                 <div className="history-list">
                   {savedCareerPlans.map(plan => (
@@ -2188,131 +2238,55 @@ export default function App() {
                 </div>
               )}
             </div>
+          ) : careerTab === "catalog" ? (
+            <CareerRoleCatalog
+              selectedRoleId={selectedCareerRole}
+              onSelectRole={(roleId) => {
+                setSelectedCareerRole(roleId);
+                setCareerTab("flow");
+              }}
+            />
           ) : (
-            <>
-              {/* Role Picker */}
-              <div className="career-tabs-row">
-                {guidance?.recommended_roles?.map(r => (
-                  <button
-                    key={r.id}
-                    className={`career-tab ${selectedCareerRole === r.id ? "active" : ""}`}
-                    onClick={() => setSelectedCareerRole(r.id)}
-                  >
-                    <strong>{r.title}</strong>
-                    <small>{r.category} • {r.salary}</small>
-                  </button>
-                ))}
-              </div>
+            <LangflowCareerGuide
+              roleData={CAREER_ROLES_CATALOG.find(r => r.id === selectedCareerRole) || CAREER_ROLES_CATALOG[0]}
+              guidanceData={guidance}
+              allRoles={CAREER_ROLES_CATALOG}
+              onSelectRole={(roleId) => setSelectedCareerRole(roleId)}
+              onBackToCatalog={() => setCareerTab("catalog")}
+              onSavePlan={async () => {
+                const activeRole = CAREER_ROLES_CATALOG.find(r => r.id === selectedCareerRole) || CAREER_ROLES_CATALOG[0];
+                const payload = guidance || {
+                  target_role: activeRole.title,
+                  target_role_id: activeRole.id,
+                  badge: activeRole.badge,
+                  overview: activeRole.overview,
+                  avg_salary: { in: activeRole.salaryIn, us: activeRole.salaryUs },
+                  readiness_percent: 85,
+                  existing_skills: activeRole.skills.slice(0, 3),
+                  missing_skills: activeRole.skills.slice(3),
+                  roadmap_steps: activeRole.roadmap_steps,
+                  recommended_projects: activeRole.recommended_projects,
+                  placement_guidance: activeRole.placement_guidance,
+                };
 
-              {guidance && (
-                <div className="panel career-overview-card">
-                  <div className="career-info-top">
-                    <div>
-                      <span className="role-chip">{guidance.badge}</span>
-                      <h3>{guidance.target_role}</h3>
-                      <p>{guidance.overview}</p>
-                    </div>
-                    <div className="salary-box">
-                      <span className="sal-label">Expected Salary</span>
-                      <strong>{guidance.avg_salary.in}</strong>
-                      <small>US: {guidance.avg_salary.us}</small>
-                    </div>
-                  </div>
-
-                  {/* Skill Gap Analysis */}
-                  <div className="skill-gap-section">
-                    <div className="skill-gap-header">
-                      <div>
-                        <h4>Skill Gap & Readiness Analysis</h4>
-                        <p>Comparing your active profile against industry standards for {guidance.target_role}.</p>
-                      </div>
-                      <div className="gap-meter">
-                        <span className="gap-percent">{guidance.readiness_percent}% Ready</span>
-                      </div>
-                    </div>
-
-                    <div className="gap-columns">
-                      <div>
-                        <h5>✓ Mastered Skills:</h5>
-                        <div className="chips-wrap">
-                          {guidance.existing_skills?.map((s, i) => <span key={i} className="chip chip-success">{s}</span>)}
-                          {guidance.existing_skills?.length === 0 && <span className="muted small">None detected yet</span>}
-                        </div>
-                      </div>
-                      <div>
-                        <h5>⚠️ Skills You Need to Learn:</h5>
-                        <div className="chips-wrap">
-                          {guidance.missing_skills?.map((s, i) => <span key={i} className="chip chip-warning">+ {s}</span>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Roadmap Steps */}
-                  <h4 style={{ margin: "24px 0 16px" }}>Actionable Preparation Roadmap</h4>
-                  <div className="phases-timeline">
-                    {guidance.roadmap_steps?.map((step, idx) => (
-                      <div key={idx} className="phase-card">
-                        <div className="phase-marker">{idx + 1}</div>
-                        <div className="phase-content">
-                          <div className="phase-head">
-                            <h5>{step.step}</h5>
-                            <span className="duration-pill"><Clock size={13} /> {step.duration}</span>
-                          </div>
-                          <ul className="phase-topics">
-                            {step.focus?.map((f, fi) => <li key={fi}>• {f}</li>)}
-                          </ul>
-                          <div className="milestone-project"><strong>🚀 Deliverable:</strong> {step.deliverable}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Placement Guidance */}
-                  <div className="placement-guidance-box">
-                    <div className="pg-card">
-                      <h5>🏢 Private Company Placements (FAANG & Startups):</h5>
-                      <p>{guidance.placement_guidance?.private_companies}</p>
-                    </div>
-                    <div className="pg-card">
-                      <h5>🏛️ Government & PSU Examinations:</h5>
-                      <p>{guidance.placement_guidance?.govt_exams}</p>
-                    </div>
-                  </div>
-
-                  <div className="career-cta-row">
-                    <button
-                      className="primary-btn"
-                      onClick={async () => {
-                        const res = await fetch(`${API_BASE_URL}/api/career/save-plan`, {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${getAuthToken()}`
-                          },
-                          body: JSON.stringify(guidance)
-                        });
-                        if (res.ok) {
-                          setCareerNotification("✅ Career plan saved to your account!");
-                          setTimeout(() => setCareerNotification(""), 3500);
-                        }
-                      }}
-                    >
-                      <Bookmark size={16} /> Save this Career Plan
-                    </button>
-                    <button
-                      className="secondary-btn"
-                      onClick={() => {
-                        setInterviewRole(selectedCareerRole);
-                        setPage("interview");
-                      }}
-                    >
-                      Start Mock Interview for this Role <Video size={16} />
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
+                const res = await fetch(`${API_BASE_URL}/api/career/save-plan`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getAuthToken()}`
+                  },
+                  body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                  setCareerNotification(`✅ ${activeRole.title} plan saved to your profile!`);
+                  setTimeout(() => setCareerNotification(""), 3500);
+                }
+              }}
+              onStartInterview={(roleId) => {
+                setInterviewRole(roleId);
+                setPage("interview");
+              }}
+            />
           )}
         </section>
       );
@@ -3452,9 +3426,20 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      {mobileMenu && (
-        <button className="mobile-scrim" onClick={() => setMobileMenu(false)} aria-label="Close menu" />
-      )}
+      <AnimatePresence>
+        {mobileMenu && (
+          <motion.button
+            key="mobile-scrim"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+            className="mobile-scrim"
+            onClick={() => setMobileMenu(false)}
+            aria-label="Close menu"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar Navigation */}
       <aside className={`sidebar ${mobileMenu ? "sidebar-open" : ""}`}>
@@ -3522,11 +3507,19 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <main className={`main-area ${page === "dashboard" || page === "jobs" || page === "tests" ? "dashboard-full-aurora-bg" : ""} ${page === "resume" ? "resume-full-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
+      <main className={`main-area ${page === "dashboard" || page === "jobs" || page === "tests" ? "dashboard-full-aurora-bg" : ""} ${page === "resume" || page === "career" ? "resume-full-bg" : ""} ${page === "chat" ? "chat-full-bleed-mode" : ""}`}>
         <header className="topbar">
           <div className="topbar-left">
-            <button className="menu-toggle" onClick={() => setMobileMenu(true)} aria-label="Open menu">
-              <Menu size={22} />
+            <button
+              className={`menu-toggle ${mobileMenu ? "menu-open" : ""}`}
+              onClick={() => setMobileMenu(prev => !prev)}
+              aria-label={mobileMenu ? "Close menu" : "Open menu"}
+            >
+              <span className="hamburger-box">
+                <span className="hamburger-line line-1" />
+                <span className="hamburger-line line-2" />
+                <span className="hamburger-line line-3" />
+              </span>
             </button>
             <div className="breadcrumb">
               Mentor AI Aura <span>/</span> <strong>{pageTitle}</strong>
@@ -3588,7 +3581,7 @@ export default function App() {
         </header>
 
         <div className={`page-content ${page === "chat" ? "page-content-chat-full" : ""}`}>
-          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && page !== "tests" && page !== "resume" && (
+          {page !== "dashboard" && page !== "chat" && page !== "contact" && page !== "jobs" && page !== "tests" && page !== "resume" && page !== "career" && (
             <div className="page-intro">
               <div>
                 <div className="eyebrow">MENTOR AI AURA <span>•</span> INTELLIGENT PLATFORM</div>

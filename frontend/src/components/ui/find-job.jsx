@@ -138,6 +138,7 @@ export const FindJobModule = ({ userProfile }) => {
   const [jobs, setJobs] = useState(INITIAL_FALLBACK_JOBS);
   const [isLoading, setIsLoading] = useState(false);
   const [errorNotice, setErrorNotice] = useState(null);
+  const [feedCheckedAt, setFeedCheckedAt] = useState(null);
 
   // Filter States
   const [searchTerm, setSearchTerm] = useState("");
@@ -173,6 +174,7 @@ export const FindJobModule = ({ userProfile }) => {
       if (data.jobs && Array.isArray(data.jobs) && data.jobs.length > 0) {
         setJobs(data.jobs);
       }
+      setFeedCheckedAt(data.feed_checked_at || null);
     } catch (err) {
       console.warn("[FindJobModule] Could not fetch live jobs, using cached data:", err);
       setErrorNotice("Using offline verified jobs. Live API will auto-reconnect.");
@@ -182,7 +184,12 @@ export const FindJobModule = ({ userProfile }) => {
   }, []);
 
   useEffect(() => {
-    fetchJobs();
+    const initialRefreshId = window.setTimeout(fetchJobs, 0);
+    const intervalId = window.setInterval(fetchJobs, 5 * 60 * 1000);
+    return () => {
+      window.clearTimeout(initialRefreshId);
+      window.clearInterval(intervalId);
+    };
   }, [fetchJobs]);
 
   // Toggle Save Job
@@ -323,6 +330,10 @@ export const FindJobModule = ({ userProfile }) => {
             <span>{isLoading ? "Syncing..." : "Sync Live Feed"}</span>
           </button>
         </div>
+        <p className="mt-3 text-xs text-slate-600">
+          Sources last checked: {feedCheckedAt ? new Date(feedCheckedAt).toLocaleString() : "not checked yet"} ·
+          {" "}Automatic refresh every 5 minutes. Confirm vacancy status on the official portal.
+        </p>
       </div>
 
       {/* Main Sector Selector Tabs (All, Govt, Private) */}

@@ -3674,3 +3674,159 @@ footer {
   display: flex;
   flex-direction: column;
 }
+
+.resume-job-recommendations {
+  margin-top: 22px;
+  padding: 22px;
+}
+
+.resume-jobs-heading,
+.resume-job-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.resume-jobs-feed-status {
+  margin-top: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.resume-jobs-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.resume-job-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.resume-job-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.resume-job-title-row h4 {
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.resume-job-title-row p {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.resume-job-fit {
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: center;
+  min-width: 76px;
+  padding: 8px;
+  border: 1px solid #c7d2fe;
+  border-radius: var(--radius-md);
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.resume-job-fit strong {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.resume-job-fit span {
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.resume-job-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 13px;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.resume-job-metrics span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.resume-job-reasons {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding-left: 17px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.resume-job-gaps {
+  margin-top: 9px;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.resume-job-apply {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.resume-job-apply:hover {
+  background: #4338ca;
+}
+
+.resume-jobs-notice,
+.resume-jobs-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  color: #92400e;
+  font-size: 12px;
+}
+
+.resume-jobs-disclaimer {
+  margin-top: 14px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .resume-jobs-heading,
+  .resume-job-card {
+    flex-direction: column;
+  }
+
+  .resume-jobs-heading .secondary-btn,
+  .resume-job-apply {
+    align-self: flex-start;
+  }
+}

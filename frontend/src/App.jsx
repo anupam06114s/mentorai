@@ -10,6 +10,7 @@ import { MentorChatModule } from "./components/ui/mentor-chat";
 import ContactWithGlobe from "./components/ui/contact-with-globe";
 import FindJobModule from "./components/ui/find-job";
 import ResumeUpdaterModal from "./components/ui/resume-updater-modal";
+import ResumeJobRecommendations from "./components/ui/resume-job-recommendations";
 import { CompanyLogo } from "./components/ui/company-logo";
 import { buildEnhancedResumeData } from "./utils/resumeOptimizer";
 import Auth from "./Auth";
@@ -846,6 +847,7 @@ export default function App() {
               "Review the enhanced bullet points and download your ATS-compliant PDF.",
               "Take a role-specific AI Mock Interview to prepare for upcoming recruiter screenings."
             ],
+            recommendations_limited: true,
             filename: file ? file.name : "Uploaded_Resume.pdf",
             analyzed_at: new Date().toISOString()
           };
@@ -1458,6 +1460,8 @@ export default function App() {
                       <span className="pillar-caption">{atsResult.word_count || 0} words • Optimal length</span>
                     </div>
                   </div>
+
+                  <ResumeJobRecommendations atsResult={atsResult} />
 
                   {/* Skill Gap Analysis Panel */}
                   <div className="skill-gap-analysis-panel">

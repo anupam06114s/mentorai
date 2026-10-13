@@ -49,7 +49,12 @@ from .test_engine import (
     evaluate_exam_submission
 )
 from .mentor_engine import generate_mentor_reply
-from .job_engine import filter_jobs, get_all_jobs
+from .job_engine import (
+    filter_jobs,
+    get_all_jobs,
+    get_jobs_feed_checked_at,
+    rank_jobs_for_resume,
+)
 
 # Load environment variables
 load_dotenv()
@@ -811,7 +816,7 @@ def get_jobs(
     """
     Real-time aggregated jobs from official Government recruitment feeds and private job APIs.
     """
-    return filter_jobs(
+    result = filter_jobs(
         search=search,
         sector=sector,
         category=category,
@@ -820,4 +825,38 @@ def get_jobs(
         page=page,
         limit=limit
     )
+    result["feed_checked_at"] = get_jobs_feed_checked_at()
+    return result
 
+@app.post("/api/jobs/recommendations")
+def recommend_jobs_for_resume(data: Dict[str, Any] = Body(...)):
+    """Return fresh job listings ranked against the analyzed resume."""
+    skills = data.get("skills", [])
+    education = data.get("education", [])
+    experience_samples = data.get("experience_samples", [])
+    ats_score = data.get("ats_score", 0)
+
+    if (
+        not isinstance(skills, list)
+        or not isinstance(education, list)
+        or not isinstance(experience_samples, list)
+        or any(not isinstance(value, str) for value in skills + education + experience_samples)
+    ):
+        raise HTTPException(status_code=400, detail="Resume skills, education, and experience must be lists of text.")
+    try:
+        ats_score = int(ats_score)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="Resume ATS score must be a number.")
+
+    jobs = get_all_jobs()
+    return {
+        "jobs": rank_jobs_for_resume(
+            jobs=jobs,
+            skills=skills,
+            ats_score=ats_score,
+            education=education,
+            experience_samples=experience_samples,
+        ),
+        "feed_checked_at": get_jobs_feed_checked_at(),
+        "refresh_interval_seconds": 300,
+    }

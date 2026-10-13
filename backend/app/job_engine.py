@@ -3,12 +3,14 @@ import json
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
 # In-memory cache
 _CACHE_DATA: List[Dict[str, Any]] = []
 _CACHE_TIMESTAMP: float = 0
-_CACHE_TTL_SECONDS = 900  # 15 minutes cache
+_CACHE_UPDATED_AT: Optional[datetime] = None
+_CACHE_TTL_SECONDS = 300  # Refresh live feeds every 5 minutes
 
 # Curated High-Priority Real Government Recruitments (Regularly active official portals)
 VERIFIED_GOVERNMENT_JOBS: List[Dict[str, Any]] = [
@@ -467,7 +469,7 @@ def _fetch_live_govt_feed() -> List[Dict[str, Any]]:
 
 def get_all_jobs(force_refresh: bool = False) -> List[Dict[str, Any]]:
     """Retrieve all jobs aggregated across Government and Private APIs with caching."""
-    global _CACHE_DATA, _CACHE_TIMESTAMP
+    global _CACHE_DATA, _CACHE_TIMESTAMP, _CACHE_UPDATED_AT
 
     now = time.time()
     if not force_refresh and _CACHE_DATA and (now - _CACHE_TIMESTAMP < _CACHE_TTL_SECONDS):
@@ -475,24 +477,188 @@ def get_all_jobs(force_refresh: bool = False) -> List[Dict[str, Any]]:
 
     all_jobs: List[Dict[str, Any]] = []
 
-    # 1. Verified Core Government Jobs
-    all_jobs.extend(VERIFIED_GOVERNMENT_JOBS)
+    # 1. Curated jobs have explicit eligibility metadata in the local catalogue.
+    all_jobs.extend(
+        {**job, "eligibility_data_available": True}
+        for job in VERIFIED_GOVERNMENT_JOBS
+    )
 
     # 2. Live Government RSS Feeds
     live_govt = _fetch_live_govt_feed()
-    all_jobs.extend(live_govt)
+    all_jobs.extend(
+        {**job, "eligibility_data_available": False}
+        for job in live_govt
+    )
 
     # 3. Live Private Jobs (Arbeitnow & Remotive)
     arbeitnow_jobs = _fetch_arbeitnow_jobs()
-    all_jobs.extend(arbeitnow_jobs)
+    all_jobs.extend(
+        {**job, "eligibility_data_available": False}
+        for job in arbeitnow_jobs
+    )
 
     remotive_jobs = _fetch_remotive_jobs()
-    all_jobs.extend(remotive_jobs)
+    all_jobs.extend(
+        {**job, "eligibility_data_available": False}
+        for job in remotive_jobs
+    )
 
     _CACHE_DATA = all_jobs
     _CACHE_TIMESTAMP = now
+    _CACHE_UPDATED_AT = datetime.now(timezone.utc)
     print(f"[JobEngine] Cache refreshed with {len(all_jobs)} jobs ({sum(1 for j in all_jobs if j['sector'] == 'government')} Govt, {sum(1 for j in all_jobs if j['sector'] == 'private')} Private)")
     return _CACHE_DATA
+
+def get_jobs_feed_checked_at() -> Optional[str]:
+    """Return when the aggregated job sources were last checked."""
+    return _CACHE_UPDATED_AT.isoformat() if _CACHE_UPDATED_AT else None
+
+def _degree_levels(text: str) -> set:
+    normalized = text.lower().replace(".", "").replace("'", "")
+    levels = set()
+    if (
+        re.search(r"\b(bachelor|bachelors|btech|bca|bsc|undergraduate)\b", normalized)
+        or re.search(r"(?<!\w)b\.e\.?(?!\w)", text, re.I)
+    ):
+        levels.add("bachelor")
+    if re.search(r"\b(master|masters|mtech|mca|msc|postgraduate)\b", normalized):
+        levels.add("master")
+    if re.search(r"\b(phd|doctorate)\b", normalized):
+        levels.add("doctorate")
+    if re.search(r"\bdiploma\b", normalized):
+        levels.add("diploma")
+    return levels
+
+def _estimated_experience_years(experience_samples: List[str]) -> Optional[int]:
+    """Estimate total experience from explicit year ranges in resume entries."""
+    intervals = []
+    current_year = datetime.now(timezone.utc).year
+    for sample in experience_samples:
+        for match in re.finditer(
+            r"\b((?:19|20)\d{2})\s*(?:[-–—]|to)\s*((?:19|20)\d{2}|present|current)\b",
+            sample.lower(),
+        ):
+            start_year = int(match.group(1))
+            end_text = match.group(2)
+            end_year = current_year if end_text in {"present", "current"} else int(end_text)
+            if start_year <= end_year <= current_year:
+                intervals.append((start_year, end_year))
+
+    if not intervals:
+        return None
+
+    intervals.sort()
+    merged = []
+    for start_year, end_year in intervals:
+        if merged and start_year <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end_year))
+        else:
+            merged.append((start_year, end_year))
+    return sum(end_year - start_year for start_year, end_year in merged)
+
+def _minimum_experience_years(requirement: str) -> Optional[float]:
+    if re.search(r"\bfresher\b|\bno experience\b", requirement, re.I):
+        return 0
+    match = re.search(
+        r"\b(\d+(?:\.\d+)?)\s*(?:\+|[-–]\s*\d+(?:\.\d+)?)?\s*(?:years?|yrs?)\b",
+        requirement,
+        re.I,
+    )
+    return float(match.group(1)) if match else None
+
+def rank_jobs_for_resume(
+    jobs: List[Dict[str, Any]],
+    skills: List[str],
+    ats_score: int,
+    education: List[str],
+    experience_samples: List[str],
+    limit: int = 5,
+) -> List[Dict[str, Any]]:
+    """Rank current job listings by transparent resume-to-listing fit signals."""
+    resume_skills = [skill.strip().lower() for skill in skills if skill.strip()]
+    education_text = " ".join(education)
+    candidate_degrees = _degree_levels(education_text)
+    candidate_experience = _estimated_experience_years(experience_samples)
+    bounded_ats_score = max(0, min(100, int(ats_score)))
+    ranked = []
+
+    for job in jobs:
+        job_skills = [str(skill).strip() for skill in job.get("skills", []) if str(skill).strip()]
+        matched_skills = [
+            skill for skill in job_skills
+            if any(skill.lower() in candidate or candidate in skill.lower() for candidate in resume_skills)
+        ]
+        skill_score = round((len(matched_skills) / len(job_skills)) * 100) if job_skills else None
+
+        eligibility_data_available = job.get("eligibility_data_available") is True
+        requirement_text = (
+            f"{job.get('experience', '')} {job.get('eligibility', '')}"
+            if eligibility_data_available else ""
+        )
+        minimum_experience = _minimum_experience_years(requirement_text) if requirement_text else None
+        experience_score = None
+        if minimum_experience is not None and candidate_experience is not None:
+            experience_score = (
+                100 if minimum_experience == 0 or candidate_experience >= minimum_experience
+                else round((candidate_experience / minimum_experience) * 100)
+            )
+
+        required_degrees = _degree_levels(requirement_text) if requirement_text else set()
+        education_score = None
+        if required_degrees:
+            education_score = 100 if candidate_degrees & required_degrees else 0
+
+        eligibility_signals = [
+            score for score in (experience_score, education_score) if score is not None
+        ]
+        eligibility_score = (
+            round(sum(eligibility_signals) / len(eligibility_signals))
+            if eligibility_signals else None
+        )
+
+        components = [(score, weight) for score, weight in (
+            (skill_score, 0.50),
+            (bounded_ats_score, 0.25),
+            (eligibility_score, 0.25),
+        ) if score is not None]
+        weight_total = sum(weight for _, weight in components)
+        fit_score = round(sum(score * weight for score, weight in components) / weight_total)
+
+        reasons = [
+            f"Skills: {len(matched_skills)} of {len(job_skills)} listed skills matched"
+            if job_skills else "This listing has no structured skills to compare",
+            f"Resume ATS score: {bounded_ats_score}/100",
+        ]
+        if experience_score is not None:
+            reasons.append(
+                f"Experience: about {candidate_experience} years found; "
+                f"{'meets' if experience_score == 100 else 'may not meet'} listed minimum"
+            )
+        elif minimum_experience is not None:
+            reasons.append("Experience requirement could not be verified from dated resume entries")
+        if education_score is not None:
+            reasons.append(
+                "Education: detected degree matches listed requirement"
+                if education_score == 100
+                else "Education: listed degree requirement was not detected in the resume"
+            )
+        elif not eligibility_data_available:
+            reasons.append("Experience and education requirements are not verified for this live listing")
+
+        ranked.append({
+            **job,
+            "ats_score": bounded_ats_score,
+            "fit_score": fit_score,
+            "skill_match_percent": skill_score,
+            "matched_skills": matched_skills,
+            "missing_job_skills": [skill for skill in job_skills if skill not in matched_skills],
+            "experience_match_percent": experience_score,
+            "education_match_percent": education_score,
+            "fit_reasons": reasons,
+        })
+
+    ranked.sort(key=lambda item: item["fit_score"], reverse=True)
+    return ranked[:max(0, limit)]
 
 def filter_jobs(
     search: Optional[str] = None,

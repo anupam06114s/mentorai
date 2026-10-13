@@ -4955,149 +4955,399 @@ body,
   transition: all 0.2s ease;
 }
 
-.langflow-back-btn:hover {
-  background: #f1f5f9;
-  color: #1e293b;
-  transform: translateX(-2px);
-}
+/* ==========================================================================
+   ⚡ LANGFLOW.ORG STUDIO PIPELINE & CANVAS ARCHITECTURE (UI/UX PRO MAX)
+   ========================================================================== */
 
-.langflow-role-badge-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.langflow-role-icon-square {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
-  flex-shrink: 0;
-}
-
-.langflow-role-title {
-  font-size: 19px;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.4px;
-  margin: 0;
-}
-
-.langflow-demand-pill {
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.1);
-  padding: 2px 8px;
-  border-radius: 9999px;
-}
-
-.langflow-role-category {
-  font-size: 12px;
-  color: #64748b;
-  margin: 2px 0 0 0;
-  font-weight: 500;
-}
-
-.langflow-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.langflow-salary-tag {
+.langflow-studio-wrapper {
   display: flex;
   flex-direction: column;
-  text-align: right;
+  gap: 16px;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.langflow-salary-tag .sal-lbl {
-  font-size: 10px;
-  font-weight: 700;
-  color: #94a3b8;
-  text-transform: uppercase;
+/* 1. Studio Top Toolbar */
+.langflow-studio-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  padding: 12px 18px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s ease;
 }
 
-.langflow-salary-tag strong {
-  font-size: 15px;
-  font-weight: 800;
-  color: #0f172a;
+.theme-dark .langflow-studio-toolbar {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(51, 65, 85, 0.8);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
-.langflow-salary-tag small {
-  font-size: 10.5px;
-  color: #64748b;
-}
-
-.langflow-actions {
+.toolbar-left, .toolbar-right {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.langflow-save-btn {
+.toolbar-divider {
+  width: 1px;
+  height: 28px;
+  background: #e2e8f0;
+}
+
+.theme-dark .toolbar-divider {
+  background: #334155;
+}
+
+.langflow-studio-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f8fafc;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  color: #334155;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
-  padding: 9px 16px;
-  border-radius: 12px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.langflow-studio-btn.secondary {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.theme-dark .langflow-studio-btn.secondary {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.langflow-studio-btn.secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: translateX(-1px);
+}
+
+.theme-dark .langflow-studio-btn.secondary:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+
+/* Theme Toggle */
+.langflow-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.langflow-save-btn:hover {
+.theme-dark .langflow-theme-toggle {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.langflow-theme-toggle:hover {
+  border-color: #6366f1;
+}
+
+/* Component palette button */
+.langflow-studio-btn.components-btn {
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.theme-dark .langflow-studio-btn.components-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.langflow-studio-btn.components-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.langflow-studio-btn.playground {
+  background: #f1f5f9;
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.25);
+  position: relative;
+}
+
+.theme-dark .langflow-studio-btn.playground {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+}
+
+.langflow-studio-btn.playground:hover {
+  background: rgba(99, 102, 241, 0.22);
+}
+
+.playground-count-badge {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+
+.langflow-studio-btn.save {
   background: #ffffff;
+  color: #334155;
+}
+
+.theme-dark .langflow-studio-btn.save {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.langflow-studio-btn.save:hover {
   border-color: #8b5cf6;
   color: #7c3aed;
 }
 
-.langflow-interview-btn {
+.langflow-studio-btn.primary {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  padding: 11px 18px;
+}
+
+.theme-dark .langflow-studio-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+}
+
+.langflow-file-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.langflow-logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.file-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  font-family: monospace;
+}
+
+.theme-dark .file-name {
+  color: #f8fafc;
+}
+
+.version-pill {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.file-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.theme-dark .file-sub {
+  color: #94a3b8;
+}
+
+.graph-status-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border: none;
-  color: #ffffff;
-  font-size: 12.5px;
+  background: #f0fdf4;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #15803d;
+  font-size: 11px;
   font-weight: 700;
-  padding: 9px 18px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.theme-dark .graph-status-badge {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.graph-status-badge .status-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+}
+
+.status-dot.ready {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.status-dot.running {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: pulseDot 1s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
+}
+
+/* Zoom controls */
+.canvas-zoom-controls {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 2px 4px;
+}
+
+.theme-dark .canvas-zoom-controls {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.zoom-btn {
+  background: transparent;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  border-radius: 4px;
+}
+
+.theme-dark .zoom-btn {
+  color: #94a3b8;
+}
+
+.zoom-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.theme-dark .zoom-btn:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+
+.zoom-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  min-width: 36px;
+  text-align: center;
+}
+
+.theme-dark .zoom-label {
+  color: #cbd5e1;
+}
+
+/* Run Pipeline Button (Langflow Play Action) */
+.langflow-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.langflow-interview-btn:hover {
+.langflow-run-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
 }
 
-/* Quick Role Switcher Strip */
-.langflow-role-tabs-strip {
+.langflow-run-btn.running {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+.flow-success-banner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  overflow: hidden;
+  gap: 10px;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
 }
 
-.langflow-strip-label {
-  font-size: 12px;
+.theme-dark .flow-success-banner {
+  background: rgba(6, 95, 70, 0.35);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+/* Track switcher row */
+.langflow-track-switcher-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-label {
+  font-size: 11px;
   font-weight: 800;
   color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   flex-shrink: 0;
 }
 
-.langflow-tabs-scroll {
+.theme-dark .track-label {
+  color: #94a3b8;
+}
+
+.track-pills-list {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -5106,572 +5356,1369 @@ body,
   -webkit-overflow-scrolling: touch;
 }
 
-.langflow-role-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+.track-pill-btn {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 13px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid #e2e8f0;
   color: #475569;
-  font-size: 12px;
-  font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.langflow-role-tab:hover {
-  background: #ffffff;
-  color: #7c3aed;
-  border-color: rgba(124, 58, 237, 0.3);
+.theme-dark .track-pill-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: #334155;
+  color: #cbd5e1;
 }
 
-.langflow-role-tab.active {
+.track-pill-btn:hover {
+  background: #ffffff;
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.theme-dark .track-pill-btn:hover {
+  background: #334155;
+  color: #a5b4fc;
+}
+
+.track-pill-btn.active {
   background: #0f172a;
   color: #ffffff;
   border-color: #0f172a;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.15);
 }
 
-/* 4. LangFlow Canvas & Pipeline */
-.langflow-canvas {
+.theme-dark .track-pill-btn.active {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border-color: transparent;
+  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* 2. Workspace Layout & Component Palette Sidebar */
+.langflow-workspace-layout {
+  display: flex;
+  gap: 16px;
   position: relative;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 1.5px, transparent 1.5px) 0 0 / 24px 24px, #ffffff;
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-radius: 28px;
-  padding: 32px 28px;
-  box-shadow: 0 16px 40px -12px rgba(99, 102, 241, 0.09);
-  overflow: hidden;
+  align-items: stretch;
 }
 
-.langflow-canvas-header {
+.langflow-components-sidebar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.06);
+  flex-shrink: 0;
+}
+
+.theme-dark .langflow-components-sidebar {
+  background: rgba(15, 23, 42, 0.94);
+  border-color: #334155;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+}
+
+.palette-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.langflow-pipeline-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.25);
-  color: #7c3aed;
+.theme-dark .palette-header {
+  border-color: #334155;
+}
+
+.palette-title {
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
-  padding: 5px 14px;
-  border-radius: 9999px;
-}
-
-.langflow-live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-}
-
-.langflow-canvas-metrics {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.langflow-metric-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  padding: 4px 12px;
-  border-radius: 10px;
-}
-
-.langflow-canvas-hint {
-  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
   color: #64748b;
-  margin: 0 0 28px 0;
-  max-width: 720px;
 }
 
-/* 5. Pipeline Nodes */
-.langflow-pipeline-grid {
+.theme-dark .palette-title {
+  color: #94a3b8;
+}
+
+.palette-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.palette-category-group {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  position: relative;
+  gap: 6px;
 }
 
-.langflow-node {
-  position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-radius: 20px;
-  padding: 22px 24px;
-  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.06);
+.palette-cat-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.palette-node-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: all 0.2s ease;
 }
 
-.langflow-node:hover {
-  border-color: rgba(139, 92, 246, 0.5);
-  box-shadow: 0 14px 34px -8px rgba(99, 102, 241, 0.16);
+.theme-dark .palette-node-item {
+  background: #1e293b;
+  border-color: #334155;
 }
 
-.langflow-node.inspected {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18), 0 16px 36px -8px rgba(99, 102, 241, 0.22);
+.palette-node-item:hover {
+  border-color: #6366f1;
+  transform: translateX(2px);
 }
 
-.langflow-node.completed {
-  border-color: #10b981;
-}
-
-/* Node Pins (Ports) */
-.node-port {
-  position: absolute;
-  width: 13px;
-  height: 13px;
+.palette-node-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
+}
+
+.palette-node-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.theme-dark .palette-node-name {
+  color: #e2e8f0;
+}
+
+/* 3. Authentic Infinite Canvas (Dot Grid) */
+.langflow-canvas-container {
+  position: relative;
+  background-image: radial-gradient(circle, #cbd5e1 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 24px;
+  min-height: 520px;
+  overflow: auto;
+  flex: 1;
+  box-shadow: inset 0 2px 8px rgba(15, 23, 42, 0.03), 0 12px 36px -10px rgba(99, 102, 241, 0.08);
+  transition: background-color 0.3s ease;
+}
+
+/* Dark Mode Studio Canvas */
+.theme-dark .langflow-canvas-container {
+  background-image: radial-gradient(circle, #334155 1.3px, transparent 1.3px);
+  background-color: #0b0f19;
+  border-color: #1e293b;
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.6), 0 12px 36px -10px rgba(0, 0, 0, 0.6);
+}
+
+.langflow-canvas-inner {
+  position: relative;
+  min-width: 100%;
+  padding: 36px 32px 50px;
+  transition: transform 0.2s ease;
+}
+
+/* Canvas Pan Navigation Arrows */
+.canvas-pan-arrows {
+  position: sticky;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 25;
+  width: fit-content;
+  pointer-events: auto;
+}
+
+.pan-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid #e2e8f0;
+  color: #475569;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  transition: all 0.2s ease;
+}
+
+.theme-dark .pan-arrow-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: #475569;
+  color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.pan-arrow-btn:hover {
   background: #6366f1;
-  border: 2.5px solid #ffffff;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+  color: #ffffff;
+  border-color: #6366f1;
+  transform: scale(1.08);
+}
+
+/* Sticky Note on Canvas */
+.canvas-sticky-note {
+  position: relative;
+  width: 290px;
+  background: #fef08a;
+  border: 1px solid #fde047;
+  border-radius: 8px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 20px -4px rgba(234, 179, 8, 0.25), 0 2px 6px rgba(0, 0, 0, 0.06);
+  transform: rotate(-1.5deg);
+  margin-bottom: 32px;
   z-index: 5;
 }
 
-.node-port.input-port {
-  top: -6.5px;
-  left: 36px;
+.theme-dark .canvas-sticky-note {
+  background: #ca8a04;
+  border-color: #eab308;
+  box-shadow: 0 8px 24px -4px rgba(202, 138, 4, 0.4);
 }
 
-.node-port.output-port {
-  bottom: -6.5px;
-  left: 36px;
+.note-tape {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(2px);
+  border: 1px dashed rgba(202, 138, 4, 0.3);
 }
 
-.langflow-node-header {
+.note-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.node-phase-badge {
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
-}
-
-.node-phase-badge .phase-num {
-  font-size: 10.5px;
-  font-weight: 800;
-  color: #ffffff;
-  background: #0f172a;
-  padding: 2px 7px;
-  border-radius: 6px;
-}
-
-.node-phase-badge .phase-label {
   font-size: 11px;
   font-weight: 800;
-  color: #7c3aed;
-  text-transform: uppercase;
+  color: #854d0e;
   letter-spacing: 0.5px;
+  margin-bottom: 6px;
 }
 
-.node-duration-pill {
-  display: inline-flex;
+.theme-dark .note-header {
+  color: #fef08a;
+}
+
+.canvas-sticky-note p {
+  font-size: 12px;
+  color: #713f12;
+  line-height: 1.45;
+  margin: 0 0 8px 0;
+}
+
+.theme-dark .canvas-sticky-note p {
+  color: #ffffff;
+}
+
+.note-meta {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 3px 10px;
-  border-radius: 9999px;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a16207;
 }
 
-.langflow-node-title {
-  font-size: 17px;
+.theme-dark .note-meta {
+  color: #fef9c3;
+}
+
+/* Graph Layout (Horizontal Pipeline) */
+.langflow-graph-layout {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: max-content;
+  padding: 10px 10px 20px 10px;
+}
+
+.langflow-node-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* 4. The Langflow Studio Node Card */
+.langflow-studio-node {
+  position: relative;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.07);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: visible;
+}
+
+.theme-dark .langflow-studio-node {
+  background: rgba(17, 24, 39, 0.95);
+  border-color: rgba(51, 65, 85, 0.7);
+  box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.5);
+}
+
+.langflow-studio-node:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 16px 36px -8px rgba(99, 102, 241, 0.22);
+  transform: translateY(-4px);
+}
+
+.theme-dark .langflow-studio-node:hover {
+  border-color: #a855f7;
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
+}
+
+.langflow-studio-node.selected {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), 0 18px 40px -8px rgba(99, 102, 241, 0.28);
+}
+
+.theme-dark .langflow-studio-node.selected {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.35), 0 0 32px rgba(168, 85, 247, 0.4);
+}
+
+.langflow-studio-node.executing {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.3), 0 0 30px rgba(6, 182, 212, 0.4);
+  animation: execPulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes execPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+.langflow-studio-node.completed {
+  border-color: #10b981;
+}
+
+.node-category-bar {
+  height: 4.5px;
+  border-radius: 18px 18px 0 0;
+}
+
+/* Left & Right Socket Handles */
+.langflow-socket {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid;
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.theme-dark .langflow-socket {
+  background: #0f172a;
+}
+
+.langflow-socket:hover {
+  transform: translateY(-50%) scale(1.3);
+}
+
+.input-socket {
+  left: -7px;
+}
+
+.output-socket {
+  right: -7px;
+}
+
+.socket-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.socket-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 6px;
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.langflow-socket:hover .socket-tooltip {
+  display: block;
+}
+
+/* Node Head */
+.node-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.theme-dark .node-head {
+  border-color: #1e293b;
+}
+
+.node-category-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 2.5px 8px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.node-title {
+  font-size: 14px;
   font-weight: 800;
   color: #0f172a;
   letter-spacing: -0.3px;
-  margin: 0 0 14px 0;
+  margin: 0;
+  line-height: 1.35;
 }
 
-.langflow-node-topics {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+.theme-dark .node-title {
+  color: #f8fafc;
 }
 
-.langflow-topic-item {
+.node-head-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.node-quick-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .node-quick-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.node-quick-btn.play:hover {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.node-quick-btn.code:hover {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.node-status-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.node-status-badge.idle {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.theme-dark .node-status-badge.idle {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.node-status-badge.done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.theme-dark .node-status-badge.done {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.node-status-badge.pulse {
+  background: #cffafe;
+  color: #0e7490;
+  animation: pulseDot 1s infinite;
+}
+
+/* Node Body & Params */
+.node-body {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.node-param-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.theme-dark .node-param-row {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.param-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.theme-dark .param-label {
+  color: #94a3b8;
+}
+
+.param-value-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
   color: #334155;
-  background: rgba(248, 250, 252, 0.85);
-  border: 1px solid rgba(241, 245, 249, 0.9);
-  padding: 8px 12px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.theme-dark .param-value-pill {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.param-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.theme-dark .param-section-title {
+  color: #94a3b8;
+}
+
+.counter-pill {
+  font-size: 10px;
+  font-weight: 800;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.node-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.node-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 7px 9px;
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
-.langflow-topic-item:hover {
+.theme-dark .node-check-item {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.node-check-item:hover {
   background: #f1f5f9;
 }
 
-.langflow-topic-item.checked {
-  background: rgba(240, 253, 244, 0.9);
-  border-color: rgba(34, 197, 94, 0.25);
-  color: #15803d;
+.theme-dark .node-check-item:hover {
+  background: #1e293b;
 }
 
-.topic-checkbox {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
+.node-check-item.checked {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.theme-dark .node-check-item.checked {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.check-box {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
   border: 1.5px solid #cbd5e1;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   background: #ffffff;
   color: #ffffff;
+  margin-top: 1px;
   transition: all 0.18s ease;
 }
 
-.topic-checkbox.active {
+.theme-dark .check-box {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+.check-box.active {
   background: #10b981;
   border-color: #10b981;
 }
 
-.langflow-node-deliverable {
-  background: linear-gradient(135deg, rgba(254, 243, 199, 0.4), rgba(253, 230, 138, 0.2));
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  border-radius: 12px;
-  padding: 10px 14px;
-  margin-bottom: 16px;
-}
-
-.deliverable-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: #b45309;
-  margin-bottom: 4px;
-}
-
-.langflow-node-deliverable p {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #78350f;
-  margin: 0;
-  line-height: 1.45;
-}
-
-.langflow-node-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid rgba(241, 245, 249, 0.9);
-}
-
-.node-status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.check-text {
   font-size: 11.5px;
-  font-weight: 600;
-  color: #64748b;
+  color: #334155;
+  line-height: 1.35;
+  font-weight: 500;
 }
 
-.node-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.theme-dark .check-text {
+  color: #e2e8f0;
 }
 
-.node-status-dot.ready {
-  background: #8b5cf6;
-  box-shadow: 0 0 6px rgba(139, 92, 246, 0.5);
+.node-deliverable-capsule {
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.45), rgba(253, 230, 138, 0.25));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 10px;
+  padding: 8px 10px;
 }
 
-.node-status-dot.done {
-  background: #10b981;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+.theme-dark .node-deliverable-capsule {
+  background: rgba(180, 83, 9, 0.18);
+  border-color: rgba(245, 158, 11, 0.4);
 }
 
-.node-inspect-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.08);
-  border: none;
-  padding: 5px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.node-inspect-btn:hover {
-  background: #7c3aed;
-  color: #ffffff;
-}
-
-/* 6. Connector Beams between Nodes */
-.langflow-connector-wrapper {
+.capsule-title {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 52px;
-  padding-left: 35px;
-  position: relative;
-}
-
-.langflow-connector-beam {
-  position: relative;
-  width: 3px;
-  height: 100%;
-  background: linear-gradient(to bottom, #8b5cf6, #06b6d4);
-  border-radius: 3px;
-}
-
-.langflow-connector-pulse {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #06b6d4;
-  box-shadow: 0 0 10px #06b6d4, 0 0 16px #8b5cf6;
-  animation: flowPulseAnim 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes flowPulseAnim {
-  0% { top: 0%; opacity: 0; }
-  25% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
-}
-
-.langflow-connector-badge {
-  display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 9.5px;
   font-weight: 800;
-  color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.08);
-  border: 1px dashed rgba(139, 92, 246, 0.25);
-  padding: 2px 8px;
-  border-radius: 6px;
   letter-spacing: 0.5px;
+  color: #b45309;
+  text-transform: uppercase;
+  margin-bottom: 3px;
 }
 
-/* 7. Intel & Capstone Grid */
-.langflow-details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+.theme-dark .capsule-title {
+  color: #fde047;
 }
 
-.langflow-intel-card, .langflow-projects-card {
-  padding: 24px;
-  border-radius: 22px;
+.node-deliverable-capsule p {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #78350f;
+  margin: 0;
+  line-height: 1.35;
 }
 
-.intel-card-head {
+.theme-dark .node-deliverable-capsule p {
+  color: #fef08a;
+}
+
+/* Node Footer */
+.node-footer {
+  padding: 10px 18px 12px;
+  border-top: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  justify-content: space-between;
 }
 
-.intel-card-head h3 {
-  font-size: 16px;
+.theme-dark .node-footer {
+  border-color: #1e293b;
+}
+
+.node-id-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.node-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+  border: none;
+  padding: 4px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .node-open-btn {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.12);
+}
+
+.node-open-btn:hover {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+/* 5. Animated Wire Connector Between Nodes */
+.langflow-wire-connector {
+  position: relative;
+  width: 90px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wire-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wire-path-base {
+  filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.25));
+}
+
+.theme-dark .wire-path-base {
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.45));
+}
+
+.wire-path-animated {
+  animation: wireFlow 1.4s linear infinite;
+}
+
+@keyframes wireFlow {
+  0% { stroke-dashoffset: 32; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.wire-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: monospace;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+.theme-dark .wire-badge {
+  background: #0f172a;
+  border-color: #334155;
+  color: #94a3b8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* 6. Floating Minimap HUD (Authentic Langflow Feature) */
+.canvas-minimap-hud {
+  position: sticky;
+  bottom: 16px;
+  left: calc(100% - 210px);
+  margin-left: auto;
+  margin-right: 16px;
+  margin-top: -90px;
+  width: 190px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.12);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.theme-dark .canvas-minimap-hud {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: #334155;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.minimap-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.6px;
+}
+
+.theme-dark .minimap-header {
+  color: #94a3b8;
+}
+
+.minimap-nodes-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.minimap-node-box {
+  flex: 1;
+  height: 20px;
+  border-radius: 5px;
+  background: #e2e8f0;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .minimap-node-box {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.minimap-node-box:hover {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+.minimap-node-box.selected {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+.minimap-node-box.exec {
+  background: #06b6d4;
+  color: #ffffff;
+  animation: execPulse 0.6s infinite alternate;
+}
+
+.minimap-progress-track {
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.theme-dark .minimap-progress-track {
+  background: #1e293b;
+}
+
+.minimap-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+  transition: width 0.3s ease;
+}
+
+.minimap-pct-text {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-align: right;
+}
+
+.theme-dark .minimap-pct-text {
+  color: #94a3b8;
+}
+
+/* 7. Bottom Intel & Strategy Bar */
+.langflow-intel-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.intel-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  transition: all 0.3s ease;
+}
+
+.theme-dark .intel-box {
+  background: rgba(15, 23, 42, 0.94);
+  border-color: #334155;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.intel-box .intel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.theme-dark .intel-box .intel-title {
+  color: #f8fafc;
+}
+
+.intel-box p {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.5;
   margin: 0;
 }
 
-.intel-card-head p {
-  font-size: 12px;
-  color: #64748b;
-  margin: 2px 0 0 0;
+.theme-dark .intel-box p {
+  color: #cbd5e1;
 }
 
-.intel-sections {
+.project-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.theme-dark .project-bullet-list {
+  color: #cbd5e1;
+}
+
+/* 8. Slide-Out Playground & Inspector Drawer */
+.playground-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 90;
+}
+
+.langflow-playground-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(500px, 94vw);
+  background: #ffffff;
+  box-shadow: -10px 0 36px rgba(15, 23, 42, 0.22);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.theme-dark .langflow-playground-drawer {
+  background: #0f172a;
+  border-left: 1px solid #1e293b;
+  box-shadow: -14px 0 45px rgba(0, 0, 0, 0.65);
+}
+
+.drawer-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-dark .drawer-header {
+  border-color: #1e293b;
+}
+
+.drawer-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+}
+
+.drawer-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.theme-dark .drawer-title {
+  color: #f8fafc;
+}
+
+.drawer-sub {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.theme-dark .drawer-sub {
+  color: #94a3b8;
+}
+
+.drawer-close-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .drawer-close-btn {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.drawer-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.theme-dark .drawer-close-btn:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+.drawer-tabs {
+  display: flex;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0 16px;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.theme-dark .drawer-tabs {
+  border-color: #1e293b;
+}
+
+.d-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .d-tab {
+  color: #94a3b8;
+}
+
+.d-tab:hover {
+  color: #0f172a;
+}
+
+.theme-dark .d-tab:hover {
+  color: #ffffff;
+}
+
+.d-tab.active {
+  color: #6366f1;
+  border-bottom-color: #6366f1;
+}
+
+.theme-dark .d-tab.active {
+  color: #a5b4fc;
+  border-bottom-color: #a5b4fc;
+}
+
+.drawer-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.intel-block {
-  padding: 14px 16px;
+.pane-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
-  border: 1px solid;
+  padding: 16px;
 }
 
-.intel-block.private {
-  background: rgba(238, 242, 255, 0.5);
-  border-color: rgba(99, 102, 241, 0.2);
+.theme-dark .pane-card {
+  background: #1e293b;
+  border-color: #334155;
 }
 
-.intel-block.govt {
-  background: rgba(240, 253, 244, 0.5);
-  border-color: rgba(34, 197, 94, 0.2);
+.pane-card.deliverable {
+  background: #fefce8;
+  border-color: #fef08a;
 }
 
-.intel-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
+.theme-dark .pane-card.deliverable {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.3);
+}
+
+.pane-badge {
+  font-size: 10px;
   font-weight: 800;
-  text-transform: uppercase;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.1);
+  padding: 2px 7px;
+  border-radius: 5px;
+  display: inline-block;
   margin-bottom: 6px;
 }
 
-.intel-block.private .intel-badge {
-  color: #4f46e5;
+.theme-dark .pane-badge {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.15);
 }
 
-.intel-block.govt .intel-badge {
-  color: #15803d;
+.pane-heading {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
 }
 
-.intel-block p {
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: #334155;
+.theme-dark .pane-heading {
+  color: #f8fafc;
+}
+
+.pane-text {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.5;
   margin: 0;
 }
 
-.projects-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.theme-dark .pane-text {
+  color: #cbd5e1;
 }
 
-.project-item {
+.drawer-checklist-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  background: rgba(248, 250, 252, 0.85);
-  border: 1px solid rgba(241, 245, 249, 0.9);
-  padding: 12px 14px;
-  border-radius: 14px;
-}
-
-.project-number {
-  font-size: 11px;
-  font-weight: 800;
-  color: #0891b2;
-  background: rgba(6, 182, 212, 0.1);
-  padding: 3px 8px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.project-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.project-info strong {
-  font-size: 13px;
-  color: #0f172a;
-}
-
-.project-tags {
-  display: flex;
-  gap: 6px;
-}
-
-.p-tag {
-  font-size: 10px;
-  font-weight: 700;
-  color: #64748b;
-  background: #ffffff;
-  padding: 1px 7px;
-  border-radius: 4px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-}
-
-/* 8. Node Detail Modal */
-.node-detail-modal {
-  max-width: 580px;
-  width: 92%;
-  padding: 24px;
-  border-radius: 24px;
-}
-
-.modal-topic-check {
-  display: flex;
-  align-items: center;
   gap: 10px;
-  font-size: 13px;
-  color: #334155;
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 10px;
+  padding: 10px 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.modal-topic-check.active {
+.theme-dark .drawer-checklist-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.drawer-checklist-item:hover {
+  border-color: #cbd5e1;
+}
+
+.theme-dark .drawer-checklist-item:hover {
+  border-color: #475569;
+}
+
+.drawer-checklist-item.active {
   background: #f0fdf4;
   border-color: #86efac;
   color: #166534;
 }
 
-.modal-deliverable-box {
-  background: #fefce8;
-  border: 1px solid #fef08a;
-  border-radius: 12px;
-  padding: 12px 14px;
+.theme-dark .drawer-checklist-item.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
 }
 
-/* Responsive Rules */
+.drawer-check {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: #ffffff;
+  color: #ffffff;
+  margin-top: 1px;
+}
+
+.theme-dark .drawer-check {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+.drawer-check.active {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+/* Python Code block & copy button */
+.copy-code-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-dark .copy-code-btn {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.copy-code-btn:hover {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.langflow-code-block {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: #38bdf8;
+  overflow-x: auto;
+  line-height: 1.6;
+  margin: 0;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.drawer-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.theme-dark .drawer-footer {
+  border-color: #1e293b;
+  background: #0f172a;
+}
+
+/* Responsive adjustments */
 @media (max-width: 900px) {
-  .langflow-details-grid {
+  .langflow-intel-bar {
     grid-template-columns: 1fr;
   }
-  .langflow-control-bar {
+  .langflow-studio-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
-  .langflow-bar-left {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .langflow-bar-right {
+  .toolbar-left, .toolbar-right {
+    flex-wrap: wrap;
     justify-content: space-between;
   }
-  .career-cards-grid {
-    grid-template-columns: 1fr;
+  .langflow-workspace-layout {
+    flex-direction: column;
   }
 }
+
+

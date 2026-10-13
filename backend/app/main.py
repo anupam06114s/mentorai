@@ -36,7 +36,7 @@ from .schemas import (
     ScheduledInterviewResponse,
     TestAttemptCreate
 )
-from .resume_analyzer import extract_text_from_file, analyze_resume_text
+from .resume_analyzer import extract_text_from_file, analyze_resume_text, generate_enhanced_resume
 from .career_engine import CAREER_ROLE_SPECS, generate_personalized_guidance
 from .interview_engine import (
     generate_interview_session,
@@ -434,6 +434,24 @@ async def analyze_resume_endpoint(
         db.refresh(analysis_record)
         result["saved_analysis_id"] = analysis_record.id
 
+    return result
+
+@app.post("/api/resume/update-with-skills")
+async def update_resume_with_skills_endpoint(
+    payload: Dict[str, Any] = Body(...),
+    user: Optional[User] = Depends(get_current_user_optional)
+):
+    raw_text = payload.get("raw_text", "")
+    target_role = payload.get("job_role", "fullstack_developer")
+    missing_skills = payload.get("missing_skills", [])
+    extracted_info = payload.get("extracted_info", {})
+
+    result = generate_enhanced_resume(
+        resume_text=raw_text,
+        target_role=target_role,
+        missing_skills=missing_skills,
+        extracted_info=extracted_info
+    )
     return result
 
 @app.get("/api/resume/history")
